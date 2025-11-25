@@ -1,7 +1,16 @@
 'use client';
 
 import { useEffect } from 'react';
-import { VideoModalProps } from '../types';
+
+interface VideoModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  videoId: string;
+  onPrev: () => void;
+  onNext: () => void;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
 
 export default function VideoModal({
   isOpen,
@@ -46,64 +55,111 @@ export default function VideoModal({
   return (
     <div
       id="videoModal"
-      className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/98 z-[9999] flex items-center justify-center p-2 md:p-4"
       onClick={onClose}
     >
+      {/* Close Button */}
       <button
-        id="closeVideoModal"
-        className="absolute top-4 right-4 text-white text-4xl hover:text-pink-500 transition z-10"
+        className="absolute top-2 right-2 md:top-4 md:right-4 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white hover:text-pink-500 transition-colors z-10 bg-black/50 rounded-full"
         onClick={onClose}
         aria-label="Cerrar modal"
       >
-        <i className="fas fa-times"></i>
+        <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
       </button>
 
-      {/* Video Container */}
+      {/* Video Container - Optimizado para móvil */}
       <div
-        className="relative w-full max-w-6xl aspect-video"
+        className="relative w-full max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <iframe
-          id="modalIframe"
-          src={
-            videoId
-              ? `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=0&autopause=0&byline=0&title=0`
-              : ''
-          }
-          className="w-full h-full rounded-lg"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+        {/* Aspect ratio container - Mejor para móvil */}
+        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+          <iframe
+            key={videoId} // Force reload on video change
+            src={
+              videoId
+                ? `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0`
+                : ''
+            }
+            className="absolute inset-0 w-full h-full rounded-lg md:rounded-xl"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+
+        {/* Info Text - Solo en desktop */}
+        <div className="hidden md:block mt-4 text-center">
+          <p className="text-white/60 text-sm">
+            Usa las flechas del teclado o los botones para navegar
+          </p>
+        </div>
       </div>
 
-      {/* Navigation Buttons */}
+      {/* Navigation Buttons - Desktop */}
       {hasPrev && (
         <button
-          id="prevVideo"
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-5xl hover:text-pink-500 transition"
+          className="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
           onClick={(e) => {
             e.stopPropagation();
             onPrev();
           }}
           aria-label="Video anterior"
         >
-          <i className="fas fa-chevron-left"></i>
+          <svg className="w-6 h-6 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
       )}
 
       {hasNext && (
         <button
-          id="nextVideo"
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-5xl hover:text-pink-500 transition"
+          className="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
           onClick={(e) => {
             e.stopPropagation();
             onNext();
           }}
           aria-label="Siguiente video"
         >
-          <i className="fas fa-chevron-right"></i>
+          <svg className="w-6 h-6 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+          </svg>
         </button>
       )}
+
+      {/* Mobile Navigation - Botones en la parte inferior */}
+      <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 flex gap-4 z-10">
+        {hasPrev && (
+          <button
+            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 transition-colors shadow-2xl"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPrev();
+            }}
+            aria-label="Video anterior"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
+
+        {hasNext && (
+          <button
+            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 transition-colors shadow-2xl"
+            onClick={(e) => {
+              e.stopPropagation();
+              onNext();
+            }}
+            aria-label="Siguiente video"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,95 +1,191 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface HeroSectionProps {
   onOpenQuoteModal: () => void;
 }
 
+// Hook para animar contadores
+function useCounter(end: number, duration: number = 2000, delay: number = 0) {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (hasAnimated) return;
+
+    const timer = setTimeout(() => {
+      const startTime = Date.now();
+      const startValue = 0;
+
+      const animate = () => {
+        const now = Date.now();
+        const progress = Math.min((now - startTime) / duration, 1);
+        
+        // Easing function para animación suave
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentCount = Math.floor(startValue + (end - startValue) * easeOutQuart);
+        
+        setCount(currentCount);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setCount(end);
+          setHasAnimated(true);
+        }
+      };
+
+      requestAnimationFrame(animate);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [end, duration, delay, hasAnimated]);
+
+  return count;
+}
+
 export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
-  const scrollToGallery = () => {
-    const gallerySection = document.getElementById('galeria');
-    if (gallerySection) {
-      const navbarHeight = 80;
-      const offsetTop = gallerySection.offsetTop - navbarHeight;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth',
-      });
-    }
-  };
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Contadores animados
+  const eventosCount = useCounter(1000, 2500, 300);
+  const experienciaCount = useCounter(4, 2000, 600);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   return (
-    <section
-      id="home"
-      className="section min-h-screen bg-[#0a0a0a] text-white flex items-center px-8 pt-20"
-    >
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        {/* Left Content */}
-        <div className="header-content">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Transforma tu evento en una{' '}
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              experiencia inolvidable
-            </span>
-          </h1>
-          <p className="text-xl text-gray-300 mb-8">
-            Pirotecnia, efectos especiales y tecnología de punta para hacer
-            brillar cada momento de tu celebración.
-          </p>
-          <div className="flex gap-4 flex-wrap">
-            <button 
-              onClick={onOpenQuoteModal}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3 rounded-full font-semibold hover:scale-105 transition"
-            >
-              Cotizar Ahora
-            </button>
-            <button 
-              onClick={scrollToGallery}
-              className="border-2 border-pink-500 px-8 py-3 rounded-full font-semibold hover:bg-pink-500/10 transition"
-            >
-              Ver Galería
-            </button>
+    <section className="relative min-h-screen flex items-center justify-center bg-black text-white overflow-hidden pt-20">
+      {/* Background con overlay */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/img/hero-bg.jpg"
+          alt="HC Efectos Background"
+          fill
+          className="object-cover opacity-30"
+          priority
+          quality={75}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          
+          {/* Left Content */}
+          <div className={`text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              Transforma tu evento en una{' '}
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                experiencia mágica
+              </span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl">
+              Pirotecnia, efectos especiales y momentos inolvidables para bodas, XV años y eventos corporativos en Valledupar.
+            </p>
+
+            {/* Botones CTA */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start mb-12">
+              <button
+                onClick={onOpenQuoteModal}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 rounded-full font-semibold text-lg hover:scale-105 transition-all shadow-lg shadow-pink-600/30"
+              >
+                Cotizar Mi Evento
+              </button>
+              
+              <a
+                href="#galeria"
+                className="border-2 border-purple-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-purple-600/10 transition-all"
+              >
+                Ver Portafolio
+              </a>
+            </div>
+
+            {/* Stats Section - NUEVO */}
+            <div className="grid grid-cols-2 gap-6 max-w-md mx-auto md:mx-0">
+              {/* Eventos Realizados */}
+              <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm border border-purple-600/30 rounded-2xl p-6 text-center transform hover:scale-105 transition-all">
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                  {eventosCount}+
+                </div>
+                <div className="text-sm text-gray-400 font-medium">
+                  Eventos Realizados
+                </div>
+              </div>
+
+              {/* Años de Experiencia */}
+              <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm border border-purple-600/30 rounded-2xl p-6 text-center transform hover:scale-105 transition-all">
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                  {experienciaCount}
+                </div>
+                <div className="text-sm text-gray-400 font-medium">
+                  Años de Experiencia
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Mouse Scroll Indicator */}
-          <div className="mouse mt-12 flex justify-center md:justify-start">
-            <div className="w-6 h-10 border-2 border-pink-500 rounded-full flex justify-center">
-              <div className="w-1 h-2 bg-pink-500 rounded-full mt-2 animate-bounce"></div>
+          {/* Right Content - Imágenes decorativas */}
+          <div className={`hidden md:block relative h-[500px] transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-2xl overflow-hidden rotate-6 hover:rotate-0 transition-all duration-500 shadow-2xl shadow-purple-600/30">
+              <Image
+                src="/img/hc-efectos/hero-1.jpg"
+                alt="Evento HC Efectos"
+                fill
+                className="object-cover"
+                sizes="256px"
+              />
+            </div>
+            
+            <div className="absolute bottom-0 left-0 w-64 h-64 rounded-2xl overflow-hidden -rotate-6 hover:rotate-0 transition-all duration-500 shadow-2xl shadow-pink-600/30">
+              <Image
+                src="/img/hc-efectos/hero-2.jpg"
+                alt="Pirotecnia HC Efectos"
+                fill
+                className="object-cover"
+                sizes="256px"
+              />
+            </div>
+
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full overflow-hidden shadow-2xl shadow-purple-600/50 hover:scale-110 transition-all duration-500 z-10">
+              <Image
+                src="/img/logo-hc-efectos-modified.png"
+                alt="HC Efectos Logo"
+                fill
+                className="object-cover"
+                sizes="192px"
+              />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Right Content - Hero Images */}
-        <div className="right-h-content relative h-[500px] md:h-[600px]">
-          <Image
-            src="/img/hero_1.jpg"
-            alt="Efecto especial 1"
-            width={300}
-            height={400}
-            className="absolute top-0 right-0 rounded-2xl shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer"
-            style={{ zIndex: 3 }}
-            loading="lazy"
-          />
-          <Image
-            src="/img/fuentes_frias2.jpg"
-            alt="Efecto especial 2"
-            width={280}
-            height={380}
-            className="absolute bottom-20 left-0 rounded-2xl shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer"
-            style={{ zIndex: 2 }}
-            loading="lazy"
-          />
-          <Image
-            src="/img/fuentes_frias.png"
-            alt="Efecto especial 3"
-            width={260}
-            height={360}
-            className="absolute top-40 left-20 rounded-2xl shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer"
-            style={{ zIndex: 1 }}
-            loading="lazy"
-          />
-        </div>
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <a href="#nosotros" className="text-white/60 hover:text-white transition">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </a>
       </div>
     </section>
   );
