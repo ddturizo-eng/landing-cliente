@@ -24,3 +24,473 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ocultar scroll cuando modal está abierto */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* ============================================
+   NAVBAR STYLES
+   ============================================ */
+
+.navigation {
+  transition: all 0.3s ease;
+}
+
+/* Navbar scrolled effect */
+.navigation.scrolled {
+  background: rgba(0, 0, 0, 0.98);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Active menu item */
+.active-menu {
+  color: #ec4899 !important;
+  font-weight: 600;
+}
+
+/* Mobile menu */
+@media (max-width: 768px) {
+  .nav-items {
+    display: none;
+  }
+
+  .nav-items.mobile-active {
+    display: flex;
+  }
+
+  .mobile-menu-toggle {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-toggle:hover {
+    color: #ec4899;
+  }
+}
+
+/* ============================================
+   HERO IMAGE OVERLAY
+   ============================================ */
+
+/* Hero image overlay */
+.hero-image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.hero-image-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.active-image {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(1.5) !important;
+  z-index: 9999 !important;
+  cursor: zoom-out !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+
+@media (min-width: 769px) {
+  * {
+    cursor: none !important;
+  }
+
+  .custom-cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: #ec4899;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    mix-blend-mode: difference;
+    transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+    transform: translate(-50%, -50%);
+  }
+
+  .cursor-trail {
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid #ec4899;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    transition: transform 0.2s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+  }
+
+  /* Efecto hover */
+  a:hover ~ .custom-cursor,
+  button:hover ~ .custom-cursor,
+  .gallery-card:hover ~ .custom-cursor,
+  .service-item:hover ~ .custom-cursor,
+  .filter-btn:hover ~ .custom-cursor,
+  input:hover ~ .custom-cursor,
+  select:hover ~ .custom-cursor,
+  textarea:hover ~ .custom-cursor {
+    width: 12px;
+    height: 12px;
+  }
+
+  a:hover ~ .cursor-trail,
+  button:hover ~ .cursor-trail,
+  .gallery-card:hover ~ .cursor-trail,
+  .service-item:hover ~ .cursor-trail,
+  .filter-btn:hover ~ .cursor-trail,
+  input:hover ~ .cursor-trail,
+  select:hover ~ .cursor-trail,
+  textarea:hover ~ .cursor-trail {
+    width: 32px;
+    height: 32px;
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.gallery-card {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.gallery-card.hidden {
+  display: none;
+}
+
+/* Smooth transitions */
+.section {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Video modal transitions */
+#videoModal,
+#quoteModal {
+  transition: opacity 0.3s ease;
+}
+
+#videoModal.active,
+#quoteModal.active {
+  opacity: 1;
+}
+
+/* ============================================
+   LAZY LOADING IMAGES
+   ============================================ */
+
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* ============================================
+   RESPONSIVE FIXES
+   ============================================ */
+
+/* Hero section - Stack vertical en mobile */
+@media (max-width: 768px) {
+  .header-content h1 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+
+  .header-content p {
+    font-size: 1rem;
+  }
+
+  /* Botones responsivos */
+  .header-content > div {
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .header-content button {
+    width: 100%;
+  }
+
+  /* Right hero content - Ocultar en mobile o hacer stack */
+  .right-h-content {
+    display: none;
+  }
+
+  /* O si quieres mostrar, hacer stack vertical */
+  .right-h-content {
+    position: relative !important;
+    height: auto !important;
+    margin-top: 2rem;
+  }
+
+  .right-h-content img {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-bottom: 1rem !important;
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 1 !important;
+  }
+}
+
+/* About section - Stack en mobile */
+@media (max-width: 768px) {
+  #nosotros .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #nosotros h3 {
+    font-size: 2rem;
+  }
+
+  #nosotros .relative {
+    height: 300px;
+  }
+}
+
+/* Services section - 1 columna en mobile */
+@media (max-width: 768px) {
+  #efectos .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #efectos h3 {
+    font-size: 2rem;
+  }
+
+  .service-item {
+    padding: 1rem;
+  }
+
+  .service-item h4 {
+    font-size: 1.1rem;
+  }
+
+  .service-item p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Gallery section - 1-2 columnas en mobile */
+@media (max-width: 640px) {
+  #galeria .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #galeria h2 {
+    font-size: 2rem;
+  }
+
+  /* Botones filtro más pequeños */
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  #galeria .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Events section - 1-2 columnas en mobile */
+@media (max-width: 640px) {
+  #eventos .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #eventos h3 {
+    font-size: 2rem;
+  }
+
+  .bg-\[\#0a0a0a\].rounded-2xl {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  #eventos .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Instagram section - Responsivo */
+@media (max-width: 768px) {
+  #instagram h3 {
+    font-size: 2rem;
+  }
+
+  #instagram p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Footer - Responsive */
+@media (max-width: 768px) {
+  footer {
+    padding: 2rem 1rem;
+  }
+
+  footer .grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  footer h3,
+  footer h4 {
+    font-size: 1.1rem;
+  }
+
+  footer ul,
+  footer li {
+    font-size: 0.9rem;
+  }
+
+  /* Social links en mobile */
+  footer .flex {
+    justify-content: center;
+  }
+}
+
+/* Modal responsivo */
+@media (max-width: 640px) {
+  #quoteModal .bg-gradient-to-br {
+    max-width: 95vw;
+    padding: 1.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  #quoteModal h2 {
+    font-size: 1.5rem;
+  }
+
+  #quoteModal form {
+    gap: 1rem;
+  }
+
+  #quoteModal input,
+  #quoteModal select,
+  #quoteModal textarea {
+    padding: 0.75rem;
+    font-size: 16px; /* Previene zoom en iOS */
+  }
+
+  #quoteModal button {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* Video Modal responsivo */
+@media (max-width: 768px) {
+  #videoModal {
+    padding: 1rem;
+  }
+
+  #videoModal .relative {
+    max-width: 100%;
+  }
+
+  #videoModal button {
+    font-size: 2rem;
+  }
+
+  #videoModal #prevVideo,
+  #videoModal #nextVideo {
+    display: none;
+  }
+}
+
+/* WhatsApp button - Responsivo */
+@media (max-width: 480px) {
+  .fixed.bottom-6.right-6 {
+    width: 56px;
+    height: 56px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .fixed.bottom-6.right-6 i {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+/* Focus visible para navegación por teclado */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #ec4899;
+  outline-offset: 2px;
+}
+
+/* Reduce motion para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}

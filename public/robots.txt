@@ -1,0 +1,36 @@
+# Robots.txt para HC Efectos
+# https://www.robotstxt.org/
+
+# Reglas para todos los bots
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /.well-known/
+Disallow: /admin/
+
+# Crawl delay (ser amable con servidores)
+Crawl-delay: 1
+
+# Permite sitemap
+Sitemap: https://hcefectos.com/sitemap.xml
+Sitemap: https://hcefectos.com/sitemap-eventos.xml
+
+# Google Bot (más permisivo)
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing Bot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Bloquear bots problemáticos
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
