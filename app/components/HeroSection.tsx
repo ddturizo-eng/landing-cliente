@@ -148,7 +148,7 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
           <div className={`hidden md:block relative h-[500px] transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="absolute top-0 right-0 w-64 h-64 rounded-2xl overflow-hidden rotate-6 hover:rotate-0 transition-all duration-500 shadow-2xl shadow-purple-600/30">
               <Image
-                src="/img/hero_1.jpg"
+                src="/img/pirotecnia1.png"
                 alt="Evento HC Efectos"
                 fill
                 className="object-cover"
