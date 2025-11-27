@@ -111,68 +111,57 @@ body.no-scroll {
 }
 
 /* ============================================
-   CUSTOM CURSOR
+   CUSTOM CURSOR - EFECTO PIROTECNIA
    ============================================ */
 
+/* Solo en desktop */
 @media (min-width: 769px) {
+  /* Ocultar cursor del sistema */
   * {
     cursor: none !important;
   }
 
-  .custom-cursor {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    background: #ec4899;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 10000;
-    mix-blend-mode: difference;
-    transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
-    transform: translate(-50%, -50%);
+  /* Optimización para animaciones del cursor */
+  body {
+    cursor: none !important;
   }
 
-  .cursor-trail {
-    position: fixed;
-    width: 24px;
-    height: 24px;
-    border: 1.5px solid #ec4899;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: difference;
-    transition: transform 0.2s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
-    transform: translate(-50%, -50%);
-    opacity: 0.6;
+  /* Los elementos del cursor se manejan directamente en el componente React */
+}
+
+/* EN MÓVIL Y TABLET: Cursor normal */
+@media (max-width: 768px) {
+  * {
+    cursor: auto !important;
   }
 
-  /* Efecto hover */
-  a:hover ~ .custom-cursor,
-  button:hover ~ .custom-cursor,
-  .gallery-card:hover ~ .custom-cursor,
-  .service-item:hover ~ .custom-cursor,
-  .filter-btn:hover ~ .custom-cursor,
-  input:hover ~ .custom-cursor,
-  select:hover ~ .custom-cursor,
-  textarea:hover ~ .custom-cursor {
-    width: 12px;
-    height: 12px;
+  a, button, [role="button"] {
+    cursor: pointer !important;
   }
 
-  a:hover ~ .cursor-trail,
-  button:hover ~ .cursor-trail,
-  .gallery-card:hover ~ .cursor-trail,
-  .service-item:hover ~ .cursor-trail,
-  .filter-btn:hover ~ .cursor-trail,
-  input:hover ~ .cursor-trail,
-  select:hover ~ .cursor-trail,
-  textarea:hover ~ .cursor-trail {
-    width: 32px;
-    height: 32px;
-    opacity: 1;
+  input, select, textarea {
+    cursor: text !important;
   }
 }
 
+/* ============================================
+   OPTIMIZACIONES DE RENDIMIENTO
+   ============================================ */
+
+/* Prevenir parpadeo en las animaciones del cursor */
+@media (min-width: 769px) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Optimizar rendering de las chispas */
+  .spark-particle {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+}
 /* ============================================
    ANIMACIONES
    ============================================ */
@@ -519,47 +508,110 @@ textarea:focus-visible {
    VIDEO MODAL MOBILE IMPROVEMENTS
    ============================================ */
 
-@media (max-width: 768px) {
-  /* Modal ocupa más espacio en móvil */
+/* En móvil, el modal ocupa TODA la pantalla */
+@media (max-width: 640px) {
   #videoModal {
-    padding: 0.5rem;
+    padding: 0 !important;
   }
 
-  /* Video más grande en móvil */
-  #videoModal .relative {
-    max-width: 100%;
-    width: 100%;
+  /* Contenedor del video usa todo el alto de la pantalla */
+  #videoModal > div {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
   }
 
-  /* Iframe fullscreen en móvil */
+  /* El iframe ocupa todo el espacio disponible */
   #videoModal iframe {
-    border-radius: 0.5rem;
+    border-radius: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
   }
 
-  /* Ocultar navegación de flechas en móvil (usar botones inferiores) */
-  #videoModal #prevVideo,
-  #videoModal #nextVideo {
-    display: none;
+  /* Ajustar posición del botón cerrar para que no tape */
+  #videoModal button[aria-label="Cerrar modal"] {
+    top: 1rem !important;
+    right: 1rem !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 20 !important;
   }
 
-  /* Botón cerrar más grande en móvil */
-  #videoModal #closeVideoModal {
-    font-size: 1.75rem;
-    width: 3rem;
-    height: 3rem;
+  /* Botones de navegación más visibles */
+  #videoModal .fixed.bottom-6 {
+    bottom: 1.5rem !important;
+  }
+
+  #videoModal .fixed.bottom-6 button {
+    background: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
   }
 }
 
-/* Para pantallas muy pequeñas */
-@media (max-width: 480px) {
+/* Para tablets pequeñas (640px - 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
   #videoModal {
-    padding: 0.25rem;
+    padding: 1rem !important;
   }
 
-  /* Video casi fullscreen */
-  #videoModal .relative {
+  #videoModal > div {
+    width: 95vw !important;
+    max-width: 95vw !important;
+  }
+}
+
+/* Para tablets y desktop (más de 768px) */
+@media (min-width: 769px) {
+  #videoModal {
+    padding: 2rem !important;
+  }
+
+  #videoModal > div {
+    max-width: 1024px !important;
+  }
+}
+
+/* Para pantallas grandes (más de 1280px) */
+@media (min-width: 1280px) {
+  #videoModal > div {
+    max-width: 1280px !important;
+  }
+}
+
+/* Asegurar que el video mantenga aspect ratio correcto en todas las pantallas */
+@media (min-width: 641px) {
+  #videoModal > div > div {
+    padding-bottom: 56.25% !important; /* 16:9 aspect ratio */
+  }
+}
+
+/* Mejoras adicionales para la experiencia móvil */
+@media (max-width: 640px) {
+  /* Prevenir scroll en el modal */
+  body.no-scroll {
+    position: fixed;
     width: 100%;
-    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Ocultar la barra de direcciones en iOS Safari al ver video */
+  #videoModal {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height para iOS */
+  }
+}
+
+/* Animación suave al abrir/cerrar el modal */
+#videoModal {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

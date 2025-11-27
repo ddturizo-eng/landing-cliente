@@ -5,23 +5,22 @@ const nextConfig = {
     // Formatos optimizados automáticos
     formats: ['image/avif', 'image/webp'],
     
-    // Reemplazar domains por remotePatterns (Next.js 16+)
+    // Dominios permitidos para imágenes externas
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'tudominio.com', // Reemplaza con tu dominio
-        port: '',
-        pathname: '/img/**',
+        hostname: 'vumbnail.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: '**.cloudinary.com', // Si usas Cloudinary
-        port: '',
+        hostname: 'i.vimeocdn.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: '**.imgix.net', // Si usas Imgix
-        port: '',
+        hostname: 'player.vimeo.com',
+        pathname: '/**',
       },
     ],
     

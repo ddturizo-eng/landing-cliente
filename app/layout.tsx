@@ -225,7 +225,7 @@ export default function RootLayout({
       <body className={montserrat.className}>
         {children}
         
-        {/* Google Analytics - Agregar solo si tienes cuenta */}
+        {/* Google Analytics - Agregar solo si tengo cuenta */}
         {/* <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-XXXXX"

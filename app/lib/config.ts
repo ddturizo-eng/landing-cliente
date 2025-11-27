@@ -1,25 +1,53 @@
 /**
- * Configuración global del proyecto HC Efectos
- * Reemplaza la constante CONFIG del JavaScript vanilla
+ * Configuración Global del Proyecto HC Efectos
+ * Estructura modular y mantenible
  */
 
+// ============================================================================
+// NEXT.JS IMAGE CONFIG
+// ============================================================================
+
+/** @type {import('next').NextConfig} */
+export const nextImageConfig = {
+  remotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'vumbnail.com',
+      pathname: '/**',
+    },
+    {
+      protocol: 'https',
+      hostname: 'i.vimeocdn.com',
+      pathname: '/**',
+    },
+    {
+      protocol: 'https',
+      hostname: 'player.vimeo.com',
+      pathname: '/**',
+    },
+  ],
+  qualities: [75, 85],
+  formats: ['image/avif', 'image/webp'],
+} as const;
+
+// ============================================================================
+// CONFIGURACIÓN DE APLICACIÓN
+// ============================================================================
+
 export const CONFIG = {
-  // Altura de la barra de navegación en píxeles
   navbarHeight: 80,
-  
-  // Duración de animaciones en milisegundos
   animationDuration: 800,
-  
-  // Offset para detectar scroll en píxeles
   scrollOffset: 100,
-  
-  // Número de WhatsApp para cotizaciones (sin + ni espacios)
   whatsappNumber: '573137431884',
 } as const;
 
-/**
- * Breakpoints para responsive design
- */
+// Alias para compatibilidad futura
+export const APP_CONFIG = CONFIG;
+
+// ============================================================================
+// RESPONSIVE DESIGN
+// ============================================================================
+
 export const BREAKPOINTS = {
   mobile: 480,
   tablet: 768,
@@ -27,9 +55,10 @@ export const BREAKPOINTS = {
   wide: 1280,
 } as const;
 
-/**
- * Efectos especiales disponibles
- */
+// ============================================================================
+// CONTENIDO DEL NEGOCIO
+// ============================================================================
+
 export const EFECTOS_ESPECIALES = [
   'Pirotecnia aerea',
   'Humo',
@@ -40,9 +69,6 @@ export const EFECTOS_ESPECIALES = [
   'Niebla Baja',
 ] as const;
 
-/**
- * Tipos de eventos
- */
 export const TIPOS_EVENTOS = [
   'Boda',
   'Cumpleaños',
@@ -52,3 +78,10 @@ export const TIPOS_EVENTOS = [
   'Evento Social',
   'Otro',
 ] as const;
+
+// ============================================================================
+// TIPOS DERIVADOS (Type-safe)
+// ============================================================================
+
+export type EfectosEspeciales = typeof EFECTOS_ESPECIALES[number];
+export type TiposEventos = typeof TIPOS_EVENTOS[number];

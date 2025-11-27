@@ -16,7 +16,7 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
     { href: '#efectos', label: 'Efectos' },
     { href: '#galeria', label: 'Galería' },
     { href: '#eventos', label: 'Eventos' },
-    { href: '#contacto', label: 'Contacto' },
+    { href: '#behold-instagram-feed', label: 'Contacto' },
   ];
 
   const handleNavClick = () => {
@@ -26,29 +26,29 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
   return (
     <>
       {/* Navbar */}
-      <nav className="navigation fixed top-0 w-full bg-black/95 backdrop-blur-md z-50 px-4 sm:px-8 py-4 border-b border-pink-500/10">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <nav className="navigation fixed top-0 w-full bg-black/95 backdrop-blur-md z-50 px-3 sm:px-6 lg:px-8 py-3 lg:py-4 border-b border-pink-500/10">
+        <div className="max-w-7xl mx-auto flex justify-between items-center gap-2 sm:gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 flex-shrink-0">
             <Image
               src="/img/logo-hc-efectos-modified.png"
               alt="HC Efectos Logo"
-              width={40}
-              height={40}
-              className="sm:w-[50px] sm:h-[50px]"
+              width={35}
+              height={35}
+              className="sm:w-[40px] sm:h-[40px] lg:w-[50px] lg:h-[50px]"
             />
-            <span className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="text-base sm:text-lg lg:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
               HC Efectos
             </span>
           </div>
 
-          {/* Desktop Menu */}
-          <ul className="hidden md:flex gap-8 nav-items">
+          {/* Desktop/Tablet Menu - Oculto en móviles y tablets pequeños */}
+          <ul className="hidden lg:flex gap-6 xl:gap-8 nav-items">
             {navLinks.map((link) => (
               <li key={link.href} className="nav-item">
                 <a 
                   href={link.href} 
-                  className="hover:text-pink-500 transition text-white text-sm"
+                  className="hover:text-pink-500 transition text-white text-sm whitespace-nowrap"
                 >
                   {link.label}
                 </a>
@@ -56,27 +56,27 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
             ))}
           </ul>
 
-          {/* Desktop CTA Button */}
+          {/* Desktop CTA Button - Solo en pantallas grandes */}
           <button 
             onClick={onOpenQuoteModal}
-            className="hidden md:block bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full font-semibold hover:scale-105 transition text-white flex-shrink-0"
+            className="hidden lg:block bg-gradient-to-r from-purple-600 to-pink-600 px-5 xl:px-6 py-2 rounded-full font-semibold hover:scale-105 transition text-white text-sm flex-shrink-0 whitespace-nowrap"
           >
             Cotizar
           </button>
 
-          {/* Mobile Hamburger Button */}
+          {/* Mobile/Tablet Hamburger Button - Visible en tablets y móviles */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 flex-shrink-0 hover:scale-110 transition"
+            className="lg:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 flex-shrink-0 hover:scale-110 transition"
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             )}
@@ -84,18 +84,18 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
         </div>
       </nav>
 
-      {/* Mobile Menu - Aparece debajo del navbar */}
+      {/* Mobile/Tablet Menu - Aparece debajo del navbar */}
       {mobileMenuOpen && (
-        <div className="fixed top-20 left-0 right-0 bg-black/98 backdrop-blur-md z-40 md:hidden border-b border-pink-500/20 px-4 py-6">
+        <div className="fixed top-[60px] sm:top-[68px] lg:top-20 left-0 right-0 bg-black/98 backdrop-blur-md z-40 lg:hidden border-b border-pink-500/20 px-4 sm:px-6 py-6">
           <div className="max-w-7xl mx-auto">
-            {/* Mobile Menu Links */}
-            <ul className="flex flex-col gap-6">
+            {/* Mobile/Tablet Menu Links */}
+            <ul className="flex flex-col gap-4 sm:gap-5">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
                     onClick={handleNavClick}
-                    className="text-white text-lg font-medium hover:text-pink-500 transition block py-2"
+                    className="text-white text-base sm:text-lg font-medium hover:text-pink-500 transition block py-2"
                   >
                     {link.label}
                   </a>
@@ -104,9 +104,9 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
             </ul>
 
             {/* Divider */}
-            <div className="border-t border-gray-800 my-6"></div>
+            <div className="border-t border-gray-800 my-5 sm:my-6"></div>
 
-            {/* Mobile CTA Button */}
+            {/* Mobile/Tablet CTA Button */}
             <button
               onClick={() => {
                 onOpenQuoteModal();
@@ -123,7 +123,7 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
       {/* Overlay when menu is open */}
       {mobileMenuOpen && (
         <div
-          className="fixed top-20 left-0 right-0 bottom-0 bg-black/40 z-30 md:hidden"
+          className="fixed top-[60px] sm:top-[68px] lg:top-20 left-0 right-0 bottom-0 bg-black/40 z-30 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}

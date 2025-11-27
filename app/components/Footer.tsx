@@ -64,9 +64,9 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="text-gray-400">Pirotecnia</li>
               <li className="text-gray-400">Efectos de Humo</li>
-              <li className="text-gray-400">Luces LED</li>
+              <li className="text-gray-400">Confeti</li>
               <li className="text-gray-400">Proyecciones</li>
-              <li className="text-gray-400">Confeti y Burbujas</li>
+              <li className="text-gray-400">Niebla baja</li>
             </ul>
           </div>
 

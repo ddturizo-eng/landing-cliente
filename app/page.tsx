@@ -166,14 +166,14 @@ export default function Home() {
                 { img: 'boda-1.jpg', icon: 'fa-ring', type: 'Boda', date: 'Oct 2024', title: 'Boda Elegante en Casa Campestre' },
                 { img: 'xv-anos-1.jpg', icon: 'fa-crown', type: 'XV Años', date: 'Sep 2024', title: 'Quinceaños de Ensueño' },
                 { img: 'corporativo-1.jpg', icon: 'fa-building', type: 'Corporativo', date: 'Ago 2024', title: 'Inauguración Empresarial' },
-                { img: 'revelacion-1.jpg', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Jul 2024', title: 'Revelación de Sexo Emocionante' },
+                { img: 'revelacionbg.png', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Jul 2024', title: 'Revelación de Sexo Emocionante' },
                 { img: 'aniversario-1.jpg', icon: 'fa-heart', type: 'Aniversario', date: 'Jun 2024', title: '50 Años de Amor' },
                 { img: 'graduacion-1.jpg', icon: 'fa-graduation-cap', type: 'Graduación', date: 'May 2024', title: 'Graduación Universitaria' }
               ].map((event, index) => (
                 <div key={index} className="bg-[#0a0a0a] rounded-2xl overflow-hidden border border-purple-600/20 hover:border-purple-600 transition hover:-translate-y-2">
                   <div className="relative h-56 overflow-hidden">
                     <Image 
-                      src={`/img/hc-efectos/eventos/${event.img}`}
+                      src={`/img/eventos/${event.img}`}
                       alt={event.title}
                       fill
                       className="object-cover hover:scale-110 transition duration-500"

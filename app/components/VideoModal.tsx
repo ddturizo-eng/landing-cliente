@@ -55,12 +55,12 @@ export default function VideoModal({
   return (
     <div
       id="videoModal"
-      className="fixed inset-0 bg-black/98 z-[9999] flex items-center justify-center p-2 md:p-4"
+      className="fixed inset-0 bg-black/98 z-[9999] flex items-center justify-center p-0 sm:p-2 md:p-4"
       onClick={onClose}
     >
       {/* Close Button */}
       <button
-        className="absolute top-2 right-2 md:top-4 md:right-4 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white hover:text-pink-500 transition-colors z-10 bg-black/50 rounded-full"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white hover:text-pink-500 transition-colors z-10 bg-black/60 backdrop-blur-sm rounded-full"
         onClick={onClose}
         aria-label="Cerrar modal"
       >
@@ -69,21 +69,21 @@ export default function VideoModal({
         </svg>
       </button>
 
-      {/* Video Container - Optimizado para móvil */}
+      {/* Video Container - Optimizado para aprovechar TODO el espacio en móvil */}
       <div
-        className="relative w-full max-w-6xl"
+        className="relative w-full h-full sm:w-[95vw] sm:h-auto md:max-w-5xl lg:max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Aspect ratio container - Mejor para móvil */}
-        <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+        {/* Aspect ratio container - En móvil usa todo el espacio */}
+        <div className="relative w-full h-full sm:h-auto" style={{ paddingBottom: window.innerWidth < 640 ? '0' : '56.25%' }}>
           <iframe
-            key={videoId} // Force reload on video change
+            key={videoId}
             src={
               videoId
                 ? `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0`
                 : ''
             }
-            className="absolute inset-0 w-full h-full rounded-lg md:rounded-xl"
+            className="absolute inset-0 w-full h-full sm:rounded-lg md:rounded-xl"
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
           ></iframe>
@@ -100,7 +100,7 @@ export default function VideoModal({
       {/* Navigation Buttons - Desktop */}
       {hasPrev && (
         <button
-          className="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
+          className="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 backdrop-blur-sm rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
           onClick={(e) => {
             e.stopPropagation();
             onPrev();
@@ -115,7 +115,7 @@ export default function VideoModal({
 
       {hasNext && (
         <button
-          className="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
+          className="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 backdrop-blur-sm rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
           onClick={(e) => {
             e.stopPropagation();
             onNext();
@@ -129,10 +129,10 @@ export default function VideoModal({
       )}
 
       {/* Mobile Navigation - Botones en la parte inferior */}
-      <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 flex gap-4 z-10">
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4 z-10">
         {hasPrev && (
           <button
-            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 transition-colors shadow-2xl"
+            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 active:scale-95 transition-all shadow-2xl border border-white/10"
             onClick={(e) => {
               e.stopPropagation();
               onPrev();
@@ -147,7 +147,7 @@ export default function VideoModal({
 
         {hasNext && (
           <button
-            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 transition-colors shadow-2xl"
+            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 active:scale-95 transition-all shadow-2xl border border-white/10"
             onClick={(e) => {
               e.stopPropagation();
               onNext();

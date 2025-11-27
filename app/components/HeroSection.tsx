@@ -62,7 +62,7 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
       {/* Background con overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/img/hero-bg.jpg"
+          src="/img/hero_1.jpg"
           alt="HC Efectos Background"
           fill
           className="object-cover opacity-30"
@@ -148,7 +148,7 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
           <div className={`hidden md:block relative h-[500px] transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="absolute top-0 right-0 w-64 h-64 rounded-2xl overflow-hidden rotate-6 hover:rotate-0 transition-all duration-500 shadow-2xl shadow-purple-600/30">
               <Image
-                src="/img/hc-efectos/hero-1.jpg"
+                src="/img/hero_1.jpg"
                 alt="Evento HC Efectos"
                 fill
                 className="object-cover"
@@ -158,7 +158,7 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
             
             <div className="absolute bottom-0 left-0 w-64 h-64 rounded-2xl overflow-hidden -rotate-6 hover:rotate-0 transition-all duration-500 shadow-2xl shadow-pink-600/30">
               <Image
-                src="/img/hc-efectos/hero-2.jpg"
+                src="/img/fuentes_frias2.jpg"
                 alt="Pirotecnia HC Efectos"
                 fill
                 className="object-cover"
@@ -168,7 +168,7 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full overflow-hidden shadow-2xl shadow-purple-600/50 hover:scale-110 transition-all duration-500 z-10">
               <Image
-                src="/img/logo-hc-efectos-modified.png"
+                src="/img/logo-hc-efectos.png"
                 alt="HC Efectos Logo"
                 fill
                 className="object-cover"

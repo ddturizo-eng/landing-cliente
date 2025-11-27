@@ -1,6 +1,6 @@
 /**
- * Hook para cursor personalizado
- * Reemplaza: initCustomCursor() del vanilla JS
+ * Hook para cursor personalizado con efecto pirotecnia
+ * Versión simplificada y optimizada
  */
 
 import { useEffect } from 'react';
@@ -10,63 +10,23 @@ export function useCustomCursor() {
   useEffect(() => {
     if (!esDesktop()) return;
 
-    const customCursor = document.querySelector(
-      '.custom-cursor'
-    ) as HTMLElement;
-    const cursorTrail = document.querySelector(
-      '.cursor-trail'
-    ) as HTMLElement;
+    // Solo ocultar el cursor por defecto del sistema
+    document.body.style.cursor = 'none';
 
-    if (!customCursor || !cursorTrail) return;
-
-    let mouseX = 0,
-      mouseY = 0;
-    let cursorX = 0,
-      cursorY = 0;
-    let trailX = 0,
-      trailY = 0;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-
-    const animateCursor = () => {
-      cursorX += (mouseX - cursorX) * 0.2;
-      cursorY += (mouseY - cursorY) * 0.2;
-      customCursor.style.left = cursorX + 'px';
-      customCursor.style.top = cursorY + 'px';
-
-      trailX += (mouseX - trailX) * 0.1;
-      trailY += (mouseY - trailY) * 0.1;
-      cursorTrail.style.left = trailX + 'px';
-      cursorTrail.style.top = trailY + 'px';
-
-      requestAnimationFrame(animateCursor);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    animateCursor();
-
+    // Ocultar cursor en elementos interactivos
     const interactiveElements = document.querySelectorAll(
-      'a, button, .gallery-card, .service-item, .filter-btn, input, select, textarea'
+      'a, button, input, select, textarea, [role="button"]'
     );
 
-    const handleMouseEnter = (el: Element) => {
-      (el as HTMLElement).addEventListener('mouseenter', () => {
-        customCursor.style.transform = 'scale(1.5)';
-        cursorTrail.style.transform = 'scale(1.3)';
-      });
-      (el as HTMLElement).addEventListener('mouseleave', () => {
-        customCursor.style.transform = 'scale(1)';
-        cursorTrail.style.transform = 'scale(1)';
-      });
-    };
-
-    interactiveElements.forEach(handleMouseEnter);
+    interactiveElements.forEach(el => {
+      (el as HTMLElement).style.cursor = 'none';
+    });
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
+      document.body.style.cursor = 'auto';
+      interactiveElements.forEach(el => {
+        (el as HTMLElement).style.cursor = '';
+      });
     };
   }, []);
 }

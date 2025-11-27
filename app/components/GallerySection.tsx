@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+// Use native <img> to avoid Next/Image hydration class toggles
+
 import VideoModal from './VideoModal';
 
 interface Video {
@@ -55,13 +56,19 @@ const VIDEOS: Video[] = [
     category: 'corporativo',
     thumbnail: `https://vumbnail.com/1135898738.jpg`,
   },
+  {
+    id: '7',
+    vimeoId: '1135898738',
+    title: 'Humo de Colores para Eventos',
+    category: 'humo',
+    thumbnail: `https://vumbnail.com/1135898738.jpg`,
+  },
 ];
 
 const FILTERS = [
   { id: 'todos', label: 'Todos' },
   { id: 'pirotecnia', label: 'Pirotecnia' },
   { id: 'humo', label: 'Humo' },
-  { id: 'luces', label: 'Luces LED' },
   { id: 'bodas', label: 'Bodas' },
   { id: 'cumpleanos', label: 'Cumpleaños' },
   { id: 'corporativo', label: 'Corporativo' },
@@ -140,14 +147,11 @@ export default function GallerySection() {
             >
               {/* Thumbnail Image - Reemplaza el iframe */}
               <div className="relative w-full h-full">
-                <Image
+                <img
                   src={video.thumbnail}
                   alt={video.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
-                  quality={85}
                 />
                 
                 {/* Gradient Overlay */}
