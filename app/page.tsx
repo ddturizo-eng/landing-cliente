@@ -163,12 +163,12 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { img: 'boda-1.jpg', icon: 'fa-ring', type: 'Boda', date: 'Oct 2024', title: 'Boda Elegante en Casa Campestre' },
-                { img: 'xv-anos-1.jpg', icon: 'fa-crown', type: 'XV Años', date: 'Sep 2024', title: 'Quinceaños de Ensueño' },
-                { img: 'corporativo-1.jpg', icon: 'fa-building', type: 'Corporativo', date: 'Ago 2024', title: 'Inauguración Empresarial' },
-                { img: 'revelacionbg.png', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Jul 2024', title: 'Revelación de Sexo Emocionante' },
-                { img: 'aniversario-1.jpg', icon: 'fa-heart', type: 'Aniversario', date: 'Jun 2024', title: '50 Años de Amor' },
-                { img: 'graduacion-1.jpg', icon: 'fa-graduation-cap', type: 'Graduación', date: 'May 2024', title: 'Graduación Universitaria' }
+                { img: 'bodatop.jpg', icon: 'fa-ring', type: 'Boda', date: 'Mar 2025', title: 'Boda Elegante en Casa Campestre' },
+                { img: 'XV.png', icon: 'fa-crown', type: 'XV Años', date: 'Sep 2024', title: 'Quinceaños de Ensueño' },
+                { img: 'conciert.png', icon: 'fa-building', type: 'Conciertos', date: 'Ago 2024', title: 'Efectos en concierto de Antonio Eslait' },
+                { img: 'Humorosa.jpg', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Oct 2025', title: 'Revelación de Sexo Emocionante' },
+                { img: 'lajuma.png', icon: 'fa-video', type: 'Video cancion', date: 'ene 2024', title: 'Efectos especiales de La Banda Del 5 - La Juma (Video Oficial)' },
+                { img: 'INa-1.png', icon: 'fa-bomb', type: 'Inauguracion', date: 'Ago 2025', title: 'Inauguracíon Inolvidable' }
               ].map((event, index) => (
                 <div key={index} className="bg-[#0a0a0a] rounded-2xl overflow-hidden border border-purple-600/20 hover:border-purple-600 transition hover:-translate-y-2">
                   <div className="relative h-56 overflow-hidden">
@@ -193,7 +193,7 @@ export default function Home() {
                   <div className="p-4">
                     <h4 className="font-bold mb-2">{event.title}</h4>
                     <p className="text-gray-400 text-sm">
-                      Un evento inolvidable lleno de magia y emoción
+                      Momentos que transformamos en experiencias únicas, llenas de luz, emoción y magia
                     </p>
                   </div>
                 </div>
