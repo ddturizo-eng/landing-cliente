@@ -58,11 +58,14 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-black text-white overflow-hidden pt-20">
+    <section 
+      id="home" 
+      className="relative min-h-screen flex items-center justify-center bg-black text-white overflow-hidden pt-20"
+    >
       {/* Background con overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/img/hero_1.jpg"
+          src="/img/Heroback.jpg"
           alt="HC Efectos Background"
           fill
           className="object-cover opacity-30"
@@ -106,7 +109,7 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
               </a>
             </div>
 
-            {/* Stats Section - NUEVO */}
+            {/* Stats Section */}
             <div className="grid grid-cols-2 gap-6 max-w-md mx-auto md:mx-0">
               {/* Eventos Realizados */}
               <div className="bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm border border-purple-600/30 rounded-2xl p-6 text-center transform hover:scale-105 transition-all">
@@ -148,7 +151,7 @@ export default function HeroSection({ onOpenQuoteModal }: HeroSectionProps) {
           <div className={`hidden md:block relative h-[500px] transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
             <div className="absolute top-0 right-0 w-64 h-64 rounded-2xl overflow-hidden rotate-6 hover:rotate-0 transition-all duration-500 shadow-2xl shadow-purple-600/30">
               <Image
-                src="/img/fuentes_frias.png"
+                src="/img/hero_1.JPG"
                 alt="Evento HC Efectos"
                 fill
                 className="object-cover"

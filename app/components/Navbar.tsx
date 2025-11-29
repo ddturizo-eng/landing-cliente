@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface NavbarProps {
@@ -9,6 +9,17 @@ interface NavbarProps {
 
 export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Detectar scroll para cambiar el navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { href: '#home', label: 'Inicio' },
@@ -16,7 +27,7 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
     { href: '#efectos', label: 'Efectos' },
     { href: '#galeria', label: 'Galería' },
     { href: '#eventos', label: 'Eventos' },
-    { href: '#behold-instagram-feed', label: 'Contacto' },
+    { href: '#instagram', label: 'Contacto' },
   ];
 
   const handleNavClick = () => {
@@ -26,7 +37,13 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
   return (
     <>
       {/* Navbar */}
-      <nav className="navigation fixed top-0 w-full bg-black/95 backdrop-blur-md z-50 px-3 sm:px-6 lg:px-8 py-3 lg:py-4 border-b border-pink-500/10">
+      <nav 
+        className={`navigation fixed top-0 w-full z-50 px-3 sm:px-6 lg:px-8 py-3 lg:py-4 transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-black/95 backdrop-blur-md shadow-2xl' 
+            : 'bg-transparent'
+        }`}
+      >
         <div className="max-w-7xl mx-auto flex justify-between items-center gap-2 sm:gap-4">
           {/* Logo */}
           <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 flex-shrink-0">
@@ -48,7 +65,7 @@ export default function Navbar({ onOpenQuoteModal }: NavbarProps) {
               <li key={link.href} className="nav-item">
                 <a 
                   href={link.href} 
-                  className="hover:text-pink-500 transition text-white text-sm whitespace-nowrap"
+                  className="hover:text-pink-500 transition text-white text-sm whitespace-nowrap font-medium"
                 >
                   {link.label}
                 </a>

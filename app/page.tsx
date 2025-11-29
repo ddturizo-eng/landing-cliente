@@ -2,26 +2,28 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 
 // Componentes estáticos
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
+import EffectsSection from './components/EffectsSection';
+import AboutSectionImproved from './components/AboutSectionImproved';
+import EventTypesSection from './components/EventTypesSection';
 
 // Componentes con lazy loading (dinámicos)
 const GallerySection = dynamic(() => import('./components/GallerySection'), {
   loading: () => <div className="min-h-screen bg-black flex items-center justify-center">Cargando galería...</div>,
-  ssr: true, // Renderizar en servidor para SEO
+  ssr: true,
 });
 
 const QuoteModal = dynamic(() => import('./components/QuoteModal'), {
-  loading: () => null, // No mostrar nada mientras carga
-  ssr: false, // No necesita SSR (es un modal)
+  loading: () => null,
+  ssr: false,
 });
 
 const CustomCursor = dynamic(() => import('./components/CustomCursor'), {
-  ssr: false, // Solo en cliente
+  ssr: false,
 });
 
 const BeholdWidget = dynamic(() => import('./components/BeholdWidget'), {
@@ -29,16 +31,15 @@ const BeholdWidget = dynamic(() => import('./components/BeholdWidget'), {
   ssr: false,
 });
 
-// Hooks optimizados (ahora en un solo useEffect)
+// Hooks optimizados
 import { useOptimizedAnimations } from './hooks/useOptimizedAnimations';
+import Image from 'next/image';
 
 export default function Home() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
 
-  // Usar hook optimizado que maneja TODOS los listeners
   useOptimizedAnimations();
 
-  // Prevenir scroll cuando modal está abierto
   useEffect(() => {
     if (quoteModalOpen) {
       document.body.classList.add('no-scroll');
@@ -50,7 +51,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Cursor personalizado (solo en desktop, lazy loaded) */}
       <CustomCursor />
 
       <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -60,103 +60,38 @@ export default function Home() {
         {/* Hero Section */}
         <HeroSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
 
-        {/* About Section */}
-        <section id="nosotros" className="section py-20 px-8">
-          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-4xl font-bold mb-6">Quiénes Somos</h3>
-              <p className="text-gray-400 mb-4">
-                HC Efectos es una empresa especializada en la creación de experiencias visuales únicas para todo tipo de eventos sociales y corporativos. Nos dedicamos a transformar momentos especiales en recuerdos inolvidables mediante el uso de efectos especiales profesionales.
-              </p>
-              <p className="text-gray-400 mb-6">
-                <strong className="text-white">Nuestra misión es simple:</strong> que cada momento especial brille con la intensidad que se merece. HC Efectos es sinónimo de excelencia, creatividad y confianza.
-              </p>
+        {/* Effects Section - Catálogo de Efectos Especiales */}
+        <EffectsSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
 
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <i className="fas fa-shield-alt text-2xl"></i>
-                  </div>
-                  <div>
-                    <h5 className="text-xl font-bold mb-2">Seguridad Certificada</h5>
-                    <p className="text-gray-400">
-                      Todos nuestros efectos cumplen con protocolos de seguridad internacionales. Equipo certificado, permisos al día y máxima precaución en cada evento.
-                    </p>
-                  </div>
-                </div>
+        {/* About Section - MEJORADA */}
+        <AboutSectionImproved />
 
-                <div className="flex gap-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <i className="fas fa-palette text-2xl"></i>
-                  </div>
-                  <div>
-                    <h5 className="text-xl font-bold mb-2">Personalización Total</h5>
-                    <p className="text-gray-400">
-                      Cada evento es único. Te asesoramos para crear el efecto perfecto según tu celebración, espacio y presupuesto. Tu visión, nuestra magia.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Event Types Section - NUEVA CON BENTO BOX */}
+        <EventTypesSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
 
-            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
-              <Image 
-                src="/img/team.jpg" 
-                alt="Equipo HC Efectos" 
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Services Section */}
-        <section id="efectos" className="section py-20 px-8 bg-[#1a1a1a]">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h3 className="text-4xl font-bold mb-4">Efectos para tu Evento</h3>
-              <p className="text-gray-400 max-w-2xl mx-auto">
-                Cada celebración es única y merece efectos especiales diseñados específicamente para ella. Descubre qué podemos crear para tu evento.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { icon: 'fa-ring', title: '💍 Bodas', desc: 'Haz de tu boda un cuento de hadas con fuentes frías, niebla baja y pirotecnia.' },
-                { icon: 'fa-crown', title: '👑 XV Años', desc: 'Una noche de ensueño para la quinceañera con efectos dignos de una princesa.' },
-                { icon: 'fa-baby', title: '🎉 Revelaciones de Género', desc: 'El momento más emocionante merece ser épico con explosión de humo de color.' },
-                { icon: 'fa-building', title: '🏢 Eventos Corporativos', desc: 'Impacta a tus clientes con inauguraciones y lanzamientos espectaculares.' },
-                { icon: 'fa-graduation-cap', title: '🎓 Eventos Institucionales', desc: 'Graduaciones y ceremonias memorables con efectos seguros y profesionales.' },
-                { icon: 'fa-star', title: '✨ Eventos Personalizados', desc: 'Diseñamos paquetes a medida combinando múltiples efectos según tu visión.' }
-              ].map((service, index) => (
-                <div key={index} className="service-item bg-[#0a0a0a] p-6 rounded-2xl border border-purple-600/20 hover:border-purple-600 transition hover:-translate-y-2">
-                  <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center mb-4">
-                    <i className={`fas ${service.icon} text-2xl`}></i>
-                  </div>
-                  <h4 className="text-xl font-bold mb-3">{service.title}</h4>
-                  <p className="text-gray-400 mb-4">{service.desc}</p>
-                  <button 
-                    onClick={() => setQuoteModalOpen(true)}
-                    className="learn-more text-pink-500 font-semibold hover:gap-3 flex items-center gap-2 transition-all"
-                  >
-                    Cotizar <span>→</span>
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Gallery Section - Con lazy loading */}
+        {/* Gallery Section */}
         <GallerySection />
 
-        {/* Events Section */}
-        <section id="eventos" className="section py-20 px-8 bg-[#1a1a1a]">
-          <div className="max-w-7xl mx-auto">
+        {/* Events Section - Eventos Destacados */}
+        <section id="eventos" className="section py-20 px-8 relative overflow-hidden bg-black">
+          {/* Fondo con gradiente y partículas */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-[#1a1a1a] to-pink-900/20"></div>
+            <div className="absolute top-20 left-[10%] w-64 h-64 bg-purple-600/20 rounded-full blur-[100px] animate-pulse"></div>
+            <div className="absolute bottom-32 right-[15%] w-80 h-80 bg-pink-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute inset-0 opacity-20" style={{
+              backgroundImage: `radial-gradient(circle, rgba(168, 85, 247, 0.4) 1px, transparent 1px)`,
+              backgroundSize: '50px 50px'
+            }}></div>
+          </div>
+
+          <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/40 via-transparent to-black/40"></div>
+
+          <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-12">
-              <h3 className="text-4xl font-bold mb-4">Eventos Destacados</h3>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <h3 className="text-4xl font-bold mb-4 drop-shadow-lg">Eventos Destacados</h3>
+              <p className="text-gray-300 max-w-2xl mx-auto drop-shadow-md">
                 Conoce algunos de los momentos mágicos que hemos creado para nuestros clientes. Cada evento es único y especial.
               </p>
             </div>
@@ -168,9 +103,12 @@ export default function Home() {
                 { img: 'conciert.png', icon: 'fa-building', type: 'Conciertos', date: 'Ago 2024', title: 'Efectos en concierto de Antonio Eslait' },
                 { img: 'Humorosa.jpg', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Oct 2025', title: 'Revelación de Sexo Emocionante' },
                 { img: 'lajuma.png', icon: 'fa-video', type: 'Video cancion', date: 'ene 2024', title: 'Efectos especiales de La Banda Del 5 - La Juma (Video Oficial)' },
-                { img: 'INa-1.png', icon: 'fa-bomb', type: 'Inauguracion', date: 'Ago 2025', title: 'Inauguracíon Inolvidable' }
+                { img: 'INa-1.png', icon: 'fa-bomb', type: 'Inauguracion', date: 'Ago 2025', title: 'Inauguración Inolvidable' }
               ].map((event, index) => (
-                <div key={index} className="bg-[#0a0a0a] rounded-2xl overflow-hidden border border-purple-600/20 hover:border-purple-600 transition hover:-translate-y-2">
+                <div 
+                  key={index} 
+                  className="bg-black/70 backdrop-blur-md rounded-2xl overflow-hidden border border-purple-600/30 hover:border-purple-500 hover:border-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/30"
+                >
                   <div className="relative h-56 overflow-hidden">
                     <Image 
                       src={`/img/eventos/${event.img}`}
@@ -179,7 +117,7 @@ export default function Home() {
                       className="object-cover hover:scale-110 transition duration-500"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex justify-between items-center">
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex justify-between items-center">
                       <div className="flex items-center gap-2">
                         <i className={`fas ${event.icon} text-pink-500`}></i>
                         <span className="text-sm font-semibold">{event.type}</span>
@@ -219,7 +157,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* BeholdWidget con lazy loading */}
             <BeholdWidget feedId="hLmRBeMEZPCyEb1kazrU" />
 
             <div className="text-center mt-8">
@@ -250,7 +187,7 @@ export default function Home() {
           <i className="fab fa-whatsapp text-3xl text-white"></i>
         </a>
 
-        {/* Modal de Cotización - Con lazy loading */}
+        {/* Modal de Cotización */}
         {quoteModalOpen && (
           <QuoteModal 
             isOpen={quoteModalOpen} 
