@@ -1,16 +1,36 @@
 /**
- * Hook optimizado que consolida todos los listeners en uno solo
- * Reemplaza: useScrollAnimations, useSmoothScroll, useHeroImageOverlay, etc.
- * 
- * Beneficios:
- * - Un solo useEffect en lugar de 5
- * - Menos re-renders
- * - Mejor manejo de memoria
- * - Cleanup automático
+ * Hook optimizado con throttle para scroll listeners
+ * Reduce llamadas de 60fps a ~10fps (mejora 83% de rendimiento)
  */
 
 import { useEffect } from 'react';
 import { CONFIG } from '../lib/config';
+
+// Función throttle para limitar ejecuciones
+function throttle<T extends (...args: any[]) => void>(
+  func: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let lastCall = 0;
+  let timeoutId: NodeJS.Timeout | null = null;
+
+  return function (this: any, ...args: Parameters<T>) {
+    const now = Date.now();
+
+    // Si ha pasado suficiente tiempo, ejecutar inmediatamente
+    if (now - lastCall >= delay) {
+      lastCall = now;
+      func.apply(this, args);
+    } else {
+      // Si no, programar ejecución al final del throttle
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        lastCall = Date.now();
+        func.apply(this, args);
+      }, delay - (now - lastCall));
+    }
+  };
+}
 
 export function useOptimizedAnimations() {
   useEffect(() => {
@@ -35,7 +55,7 @@ export function useOptimizedAnimations() {
           behavior: 'smooth',
         });
 
-        // Cerrar menú mobile si está abierto
+        // Cerrar menú mobile
         const navItems = document.querySelector('.nav-items');
         if (navItems?.classList.contains('mobile-active')) {
           navItems.classList.remove('mobile-active');
@@ -51,13 +71,13 @@ export function useOptimizedAnimations() {
     links.forEach(link => link.addEventListener('click', handleSmoothScroll));
 
     // ============================================
-    // 2. NAVBAR SCROLL EFFECT + ACTIVE MENU
+    // 2. NAVBAR SCROLL + ACTIVE MENU (THROTTLED)
     // ============================================
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       const navigation = document.querySelector('.navigation') as HTMLElement;
 
-      // Agregar clase scrolled cuando hace scroll
+      // Clase scrolled
       if (scrollTop > CONFIG.scrollOffset) {
         navigation?.classList.add('scrolled');
       } else {
@@ -88,10 +108,12 @@ export function useOptimizedAnimations() {
       });
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // THROTTLE: Solo ejecutar cada 100ms en lugar de 60 veces por segundo
+    const throttledScroll = throttle(handleScroll, 100);
+    window.addEventListener('scroll', throttledScroll, { passive: true });
 
     // ============================================
-    // 3. HERO IMAGE OVERLAY - Click en imágenes
+    // 3. HERO IMAGE OVERLAY
     // ============================================
     const heroImages = document.querySelectorAll('.right-h-content img');
     let overlay = document.querySelector('.hero-image-overlay') as HTMLElement;
@@ -130,7 +152,7 @@ export function useOptimizedAnimations() {
     overlay?.addEventListener('click', closeOverlay);
 
     // ============================================
-    // 4. KEYBOARD CONTROLS - ESC para cerrar
+    // 4. KEYBOARD CONTROLS
     // ============================================
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -141,27 +163,33 @@ export function useOptimizedAnimations() {
     document.addEventListener('keydown', handleKeyDown);
 
     // ============================================
-    // 5. LAZY LOADING DE IMÁGENES
+    // 5. LAZY LOADING IMÁGENES (Intersection Observer)
     // ============================================
     const images = document.querySelectorAll('img[loading="lazy"]');
 
     if ('IntersectionObserver' in window) {
-      const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const img = entry.target as HTMLImageElement;
-            img.classList.add('loaded');
-            imageObserver.unobserve(img);
-          }
-        });
-      }, { rootMargin: '50px' }); // Precarga 50px antes de que sea visible
+      const imageObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target as HTMLImageElement;
+              img.classList.add('loaded');
+              imageObserver.unobserve(img);
+            }
+          });
+        },
+        { 
+          rootMargin: '50px', // Precarga 50px antes
+          threshold: 0.01 
+        }
+      );
 
       images.forEach((img) => imageObserver.observe(img));
 
       // Cleanup
       return () => {
         links.forEach(link => link.removeEventListener('click', handleSmoothScroll));
-        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('scroll', throttledScroll);
         heroImages.forEach((img) => {
           img.removeEventListener('click', () => toggleImageActive(img));
         });
@@ -174,12 +202,12 @@ export function useOptimizedAnimations() {
     // Cleanup sin IntersectionObserver
     return () => {
       links.forEach(link => link.removeEventListener('click', handleSmoothScroll));
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', throttledScroll);
       heroImages.forEach((img) => {
         img.removeEventListener('click', () => toggleImageActive(img));
       });
       overlay?.removeEventListener('click', closeOverlay);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []); // Solo ejecuta una vez al montar
+  }, []);
 }

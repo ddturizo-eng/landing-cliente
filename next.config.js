@@ -2,10 +2,8 @@
 const nextConfig = {
   // Optimización de imágenes
   images: {
-    // Formatos optimizados automáticos
     formats: ['image/avif', 'image/webp'],
     
-    // Dominios permitidos para imágenes externas
     remotePatterns: [
       {
         protocol: 'https',
@@ -24,38 +22,29 @@ const nextConfig = {
       },
     ],
     
-    // Tamaños responsivos predefinidos
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    
-    // Cache de imágenes optimizadas (1 año)
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
     minimumCacheTTL: 31536000,
+    
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   // Compresión y optimización
   compress: true,
-
-  // Generar static HTML cuando sea posible
   staticPageGenerationTimeout: 120,
 
-  // Turbopack config (Next.js 16 por defecto)
-  turbopack: {
-    resolveAlias: {
-      '@': './app',
-    },
-  },
-
-  // Experimental features para mejor performance
+  // Experimental features
   experimental: {
-    // Optimización de paquetes
-    optimizePackageImports: [
-      'lucide-react',
-    ],
+    optimizePackageImports: ['lucide-react', 'react-icons'],
+    scrollRestoration: true,
   },
 
-  // Headers de seguridad y performance
+  // Headers de seguridad y cache
   async headers() {
     return [
+      // Headers globales
       {
         source: '/(.*)',
         headers: [
@@ -75,9 +64,13 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
           },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
         ],
       },
-      // Cache de recursos estáticos
+      // Cache para recursos estáticos
       {
         source: '/static/:path*',
         headers: [
@@ -87,17 +80,17 @@ const nextConfig = {
           },
         ],
       },
-      // Cache de imágenes
+      // Cache para imágenes
       {
         source: '/img/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000',
+            value: 'public, max-age=31536000, stale-while-revalidate',
           },
         ],
       },
-      // Cache de fuentes
+      // Cache para fuentes
       {
         source: '/fonts/:path*',
         headers: [
@@ -110,30 +103,13 @@ const nextConfig = {
     ];
   },
 
-  // Rewrites para URLs limpias
-  async rewrites() {
-    return {
-      beforeFiles: [
-        // Rewrite de sitemap
-        {
-          source: '/sitemap.xml',
-          destination: '/api/sitemap',
-        },
-      ],
-    };
-  },
+  // Turbopack config (silenciar warning de Next.js 16)
+  turbopack: {},
 
-  // Redirects (si necesitas cambiar URLs en el futuro)
-  async redirects() {
-    return [
-      // Ejemplo: redirección de galería antigua
-      // {
-      //   source: '/videos-viejos',
-      //   destination: '/galeria',
-      //   permanent: true,
-      // },
-    ];
-  },
+  // Configuraciones adicionales
+  reactStrictMode: true,
+  trailingSlash: false,
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
 };
 
 module.exports = nextConfig;

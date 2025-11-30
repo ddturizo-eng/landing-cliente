@@ -2,21 +2,51 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
-// Componentes estáticos
+// Componentes críticos - Carga inmediata
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import Footer from './components/Footer';
-import EffectsSection from './components/EffectsSection';
-import AboutSectionImproved from './components/AboutSectionImproved';
-import EventTypesSection from './components/EventTypesSection';
 
-// Componentes con lazy loading (dinámicos)
-const GallerySection = dynamic(() => import('./components/GallerySection'), {
-  loading: () => <div className="min-h-screen bg-black flex items-center justify-center">Cargando galería...</div>,
+// Componentes importantes - Carga con prioridad
+const EffectsSection = dynamic(() => import('./components/EffectsSection'), {
+  loading: () => (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-400">Cargando efectos...</p>
+      </div>
+    </div>
+  ),
   ssr: true,
 });
 
+const AboutSectionImproved = dynamic(() => import('./components/AboutSectionImproved'), {
+  loading: () => <div className="min-h-screen bg-[#1a1a1a] animate-pulse"></div>,
+  ssr: true,
+});
+
+const EventTypesSection = dynamic(() => import('./components/EventTypesSection'), {
+  loading: () => <div className="min-h-screen bg-[#1a1a1a] animate-pulse"></div>,
+  ssr: true,
+});
+
+// Componentes secundarios - Lazy load total
+const GallerySection = dynamic(() => import('./components/GallerySection'), {
+  loading: () => (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <p className="text-gray-400">Cargando galería...</p>
+    </div>
+  ),
+  ssr: false, // No renderizar en servidor
+});
+
+const Footer = dynamic(() => import('./components/Footer'), {
+  loading: () => null,
+  ssr: true,
+});
+
+// Componentes que solo se cargan cuando se necesitan
 const QuoteModal = dynamic(() => import('./components/QuoteModal'), {
   loading: () => null,
   ssr: false,
@@ -33,12 +63,18 @@ const BeholdWidget = dynamic(() => import('./components/BeholdWidget'), {
 
 // Hooks optimizados
 import { useOptimizedAnimations } from './hooks/useOptimizedAnimations';
-import Image from 'next/image';
 
 export default function Home() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [showWhatsApp, setShowWhatsApp] = useState(false);
 
   useOptimizedAnimations();
+
+  // Mostrar botón de WhatsApp después de 2 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => setShowWhatsApp(true), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (quoteModalOpen) {
@@ -60,13 +96,13 @@ export default function Home() {
         {/* Hero Section */}
         <HeroSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
 
-        {/* Effects Section - Catálogo de Efectos Especiales */}
+        {/* Effects Section */}
         <EffectsSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
 
-        {/* About Section - MEJORADA */}
+        {/* About Section */}
         <AboutSectionImproved />
 
-        {/* Event Types Section - NUEVA CON BENTO BOX */}
+        {/* Event Types Section */}
         <EventTypesSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
 
         {/* Gallery Section */}
@@ -74,25 +110,18 @@ export default function Home() {
 
         {/* Events Section - Eventos Destacados */}
         <section id="eventos" className="section py-20 px-8 relative overflow-hidden bg-black">
-          {/* Fondo con gradiente y partículas */}
+          {/* Fondo con gradiente */}
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-[#1a1a1a] to-pink-900/20"></div>
             <div className="absolute top-20 left-[10%] w-64 h-64 bg-purple-600/20 rounded-full blur-[100px] animate-pulse"></div>
             <div className="absolute bottom-32 right-[15%] w-80 h-80 bg-pink-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute inset-0 opacity-20" style={{
-              backgroundImage: `radial-gradient(circle, rgba(168, 85, 247, 0.4) 1px, transparent 1px)`,
-              backgroundSize: '50px 50px'
-            }}></div>
           </div>
-
-          <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/40 via-transparent to-black/40"></div>
 
           <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center mb-12">
               <h3 className="text-4xl font-bold mb-4 drop-shadow-lg">Eventos Destacados</h3>
               <p className="text-gray-300 max-w-2xl mx-auto drop-shadow-md">
-                Conoce algunos de los momentos mágicos que hemos creado para nuestros clientes. Cada evento es único y especial.
+                Conoce algunos de los momentos mágicos que hemos creado para nuestros clientes.
               </p>
             </div>
 
@@ -102,12 +131,12 @@ export default function Home() {
                 { img: 'XV.png', icon: 'fa-crown', type: 'XV Años', date: 'Sep 2024', title: 'Quinceaños de Ensueño' },
                 { img: 'conciert.png', icon: 'fa-building', type: 'Conciertos', date: 'Ago 2024', title: 'Efectos en concierto de Antonio Eslait' },
                 { img: 'Humorosa.jpg', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Oct 2025', title: 'Revelación de Sexo Emocionante' },
-                { img: 'lajuma.png', icon: 'fa-video', type: 'Video cancion', date: 'ene 2024', title: 'Efectos especiales de La Banda Del 5 - La Juma (Video Oficial)' },
+                { img: 'lajuma.png', icon: 'fa-video', type: 'Video cancion', date: 'ene 2024', title: 'Efectos especiales de La Banda Del 5' },
                 { img: 'INa-1.png', icon: 'fa-bomb', type: 'Inauguracion', date: 'Ago 2025', title: 'Inauguración Inolvidable' }
               ].map((event, index) => (
                 <div 
                   key={index} 
-                  className="bg-black/70 backdrop-blur-md rounded-2xl overflow-hidden border border-purple-600/30 hover:border-purple-500 hover:border-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/30"
+                  className="bg-black/70 backdrop-blur-md rounded-2xl overflow-hidden border border-purple-600/30 hover:border-purple-500 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/30"
                 >
                   <div className="relative h-56 overflow-hidden">
                     <Image 
@@ -116,6 +145,8 @@ export default function Home() {
                       fill
                       className="object-cover hover:scale-110 transition duration-500"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading="lazy"
+                      quality={75}
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 flex justify-between items-center">
                       <div className="flex items-center gap-2">
@@ -131,7 +162,7 @@ export default function Home() {
                   <div className="p-4">
                     <h4 className="font-bold mb-2">{event.title}</h4>
                     <p className="text-gray-400 text-sm">
-                      Momentos que transformamos en experiencias únicas, llenas de luz, emoción y magia
+                      Momentos que transformamos en experiencias únicas
                     </p>
                   </div>
                 </div>
@@ -153,7 +184,7 @@ export default function Home() {
                   className="text-pink-500 hover:text-pink-400 font-semibold"
                 >
                   @hcefectos
-                </a> - Descubre más momentos mágicos en nuestras redes sociales
+                </a> - Descubre más momentos mágicos
               </p>
             </div>
 
@@ -176,16 +207,18 @@ export default function Home() {
         {/* Footer */}
         <Footer />
 
-        {/* WhatsApp Float Button */}
-        <a 
-          href="https://wa.me/573137431884?text=Hola%20HC%20Efectos,%20quiero%20cotizar%20un%20evento"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center hover:scale-110 transition shadow-2xl z-50 animate-pulse"
-          aria-label="Contactar por WhatsApp"
-        >
-          <i className="fab fa-whatsapp text-3xl text-white"></i>
-        </a>
+        {/* WhatsApp Float Button - Lazy load */}
+        {showWhatsApp && (
+          <a 
+            href="https://wa.me/573137431884?text=Hola%20HC%20Efectos,%20quiero%20cotizar%20un%20evento"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center hover:scale-110 transition shadow-2xl z-50 animate-pulse"
+            aria-label="Contactar por WhatsApp"
+          >
+            <i className="fab fa-whatsapp text-3xl text-white"></i>
+          </a>
+        )}
 
         {/* Modal de Cotización */}
         {quoteModalOpen && (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 type Props = {
   feedId: string;
@@ -9,16 +9,49 @@ type Props = {
 
 export default function BeholdWidget({ feedId, containerId = "behold-instagram-feed" }: Props) {
   const [loaded, setLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  // Detectar si es móvil
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  // Intersection Observer - Solo cargar cuando esté visible
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.disconnect(); // Dejar de observar una vez cargado
+          }
+        });
+      },
+      {
+        rootMargin: "200px", // Empezar a cargar 200px antes de que sea visible
+        threshold: 0.01,
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Cargar script de Behold SOLO cuando sea visible
+  useEffect(() => {
+    if (!isVisible || typeof window === "undefined") return;
+
     const scriptSrc = "https://w.behold.so/widget.js";
 
-    // If script already present, assume it will initialize or is initialized
-    const existing = document.querySelector(`script[src=\"${scriptSrc}\"]`);
+    // Si script ya existe, solo activar
+    const existing = document.querySelector(`script[src="${scriptSrc}"]`);
     if (existing) {
-      // Give the script a tick to initialize
       setTimeout(() => setLoaded(true), 50);
       return;
     }
@@ -26,7 +59,7 @@ export default function BeholdWidget({ feedId, containerId = "behold-instagram-f
     const s = document.createElement("script");
     s.src = scriptSrc;
     s.async = true;
-    // The original integration used a module script; keep as module if available.
+
     try {
       (s as HTMLScriptElement).type = "module";
     } catch (e) {
@@ -38,24 +71,45 @@ export default function BeholdWidget({ feedId, containerId = "behold-instagram-f
     };
 
     s.onerror = () => {
-      // Still set loaded to avoid blocking UI — the widget may fail silently.
       setLoaded(true);
-      // Optionally, you could log an error to monitoring here.
     };
 
     document.head.appendChild(s);
 
     return () => {
-      // do not remove the script on unmount — avoids reloading on route changes
+      // No remover el script para evitar recargas
     };
-  }, []);
+  }, [isVisible]);
 
   return (
-    <div id={containerId} className="mb-8">
-      {loaded ? (
-        <div dangerouslySetInnerHTML={{ __html: `<behold-widget feed-id=\"${feedId}\"></behold-widget>` }} />
+    <div ref={containerRef} id={containerId} className="mb-8 min-h-[400px]">
+      {!isVisible ? (
+        // Placeholder mientras no sea visible
+        <div className="h-[400px] flex items-center justify-center text-gray-400 bg-gray-900/30 rounded-lg">
+          <div className="text-center">
+            <i className="fab fa-instagram text-4xl text-pink-500 mb-2"></i>
+            <p>Instagram Feed</p>
+          </div>
+        </div>
+      ) : loaded ? (
+        // Widget con configuración optimizada para móvil
+        <div 
+          dangerouslySetInnerHTML={{ 
+            __html: `<behold-widget 
+              feed-id="${feedId}"
+              ${isMobile ? 'autoplay="false"' : ''}
+              ${isMobile ? 'limit="9"' : ''}
+            ></behold-widget>` 
+          }} 
+        />
       ) : (
-        <div className="h-48 flex items-center justify-center text-gray-400">Cargando feed...</div>
+        // Loading state
+        <div className="h-[400px] flex items-center justify-center text-gray-400 bg-gray-900/30 rounded-lg animate-pulse">
+          <div className="text-center">
+            <i className="fab fa-instagram text-4xl text-pink-500 mb-2 animate-spin"></i>
+            <p>Cargando feed de Instagram...</p>
+          </div>
+        </div>
       )}
     </div>
   );

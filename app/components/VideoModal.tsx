@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface VideoModalProps {
   isOpen: boolean;
@@ -21,6 +21,21 @@ export default function VideoModal({
   hasNext,
   hasPrev,
 }: VideoModalProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar móvil
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
@@ -38,6 +53,7 @@ export default function VideoModal({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, onPrev, onNext, hasNext, hasPrev]);
 
+  // Body scroll lock
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add('no-scroll');
@@ -50,7 +66,27 @@ export default function VideoModal({
     };
   }, [isOpen]);
 
+  // Reset loading cuando cambia el video
+  useEffect(() => {
+    if (isOpen && videoId) {
+      setIsLoading(true);
+    }
+  }, [videoId, isOpen]);
+
   if (!isOpen) return null;
+
+  // Construir URL optimizada según dispositivo
+  const getVimeoUrl = () => {
+    const baseUrl = `https://player.vimeo.com/video/${videoId}`;
+    
+    // Parámetros optimizados para móvil
+    const mobileParams = 'quality=360p&autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0';
+    
+    // Parámetros para desktop
+    const desktopParams = 'quality=720p&autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0';
+    
+    return `${baseUrl}?${isMobile ? mobileParams : desktopParams}`;
+  };
 
   return (
     <div
@@ -69,23 +105,31 @@ export default function VideoModal({
         </svg>
       </button>
 
-      {/* Video Container - Optimizado para aprovechar TODO el espacio en móvil */}
+      {/* Video Container */}
       <div
         className="relative w-full h-full sm:w-[95vw] sm:h-auto md:max-w-5xl lg:max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Aspect ratio container - En móvil usa todo el espacio */}
-        <div className="relative w-full h-full sm:h-auto" style={{ paddingBottom: window.innerWidth < 640 ? '0' : '56.25%' }}>
+        {/* Aspect ratio container */}
+        <div className="relative w-full h-full sm:h-auto" style={{ paddingBottom: typeof window !== 'undefined' && window.innerWidth < 640 ? '0' : '56.25%' }}>
+          {/* Loading spinner */}
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-white text-sm">Cargando video...</p>
+                {isMobile && <p className="text-gray-400 text-xs mt-2">Calidad optimizada para móvil</p>}
+              </div>
+            </div>
+          )}
+
           <iframe
             key={videoId}
-            src={
-              videoId
-                ? `https://player.vimeo.com/video/${videoId}?autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0`
-                : ''
-            }
+            src={videoId ? getVimeoUrl() : ''}
             className="absolute inset-0 w-full h-full sm:rounded-lg md:rounded-xl"
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
+            onLoad={() => setIsLoading(false)}
           ></iframe>
         </div>
 

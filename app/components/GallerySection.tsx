@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-// Use native <img> to avoid Next/Image hydration class toggles
-
+import { useState, useMemo } from 'react';
 import VideoModal from './VideoModal';
 
 interface Video {
@@ -79,10 +77,12 @@ export default function GallerySection() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
-  const filteredVideos =
-    activeFilter === 'todos'
+  // Memoizar videos filtrados para evitar recalcular
+  const filteredVideos = useMemo(() => {
+    return activeFilter === 'todos'
       ? VIDEOS
       : VIDEOS.filter((video) => video.category === activeFilter);
+  }, [activeFilter]);
 
   const handleOpenModal = (index: number) => {
     setCurrentVideoIndex(index);
@@ -137,7 +137,7 @@ export default function GallerySection() {
           ))}
         </div>
 
-        {/* Gallery Grid - Optimizado para móvil */}
+        {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {filteredVideos.map((video, index) => (
             <div
@@ -145,19 +145,20 @@ export default function GallerySection() {
               className="gallery-card group relative aspect-video bg-gray-900 rounded-xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-600/20"
               onClick={() => handleOpenModal(index)}
             >
-              {/* Thumbnail Image - Reemplaza el iframe */}
+              {/* Thumbnail Image con loading lazy nativo */}
               <div className="relative w-full h-full">
                 <img
                   src={video.thumbnail}
                   alt={video.title}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
                 
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
 
-                {/* Play Button - Más grande en móvil */}
+                {/* Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center transform transition-all duration-300 group-hover:scale-110 shadow-2xl">
                     <svg 
@@ -177,6 +178,7 @@ export default function GallerySection() {
                     e.stopPropagation();
                     handleOpenModal(index);
                   }}
+                  aria-label="Ver video completo"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
