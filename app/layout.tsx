@@ -131,6 +131,19 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* Preload de assets críticos */}
+        <link
+          rel="preload"
+          as="image"
+          href="/img/Heroback.jpg"
+          media="(min-width: 768px)"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/img/logo-hc-efectos-modified.png"
+        />
+
         {/* Font Awesome - MANTENER mientras migramos a Lucide */}
         <link
           rel="stylesheet"
@@ -146,6 +159,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://player.vimeo.com" />
         <link rel="preconnect" href="https://w.behold.so" />
+        <link rel="preconnect" href="https://vimeo.com" />
+        <link rel="preconnect" href="https://i.vimeocdn.com" />
 
         {/* DNS Prefetch para dominios externos */}
         <link rel="dns-prefetch" href="https://wa.me" />

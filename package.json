@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "critters": "^0.0.23",
     "gsap": "^3.13.0",
     "next": "16.0.3",
     "react": "19.2.0",
