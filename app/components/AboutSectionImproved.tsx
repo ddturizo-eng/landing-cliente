@@ -5,13 +5,9 @@ import Image from 'next/image';
 
 export default function AboutSectionSimple() {
   const [countersVisible, setCountersVisible] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Fix hidratación: solo montar después del cliente
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,93 +27,91 @@ export default function AboutSectionSimple() {
   }, []);
 
   return (
-    <section id="nosotros" className="section py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-black">
+    <section id="nosotros" className="section py-8 sm:py-12 md:py-20 px-4 sm:px-6 md:px-8 bg-black">
       <div className="max-w-7xl mx-auto">
-        {/* Stats Cards - Más compactas en móvil */}
-        <div ref={sectionRef} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-12 md:mb-16">
+        {/* Stats Cards - Grid 2x2 en móvil, más compacto */}
+        <div ref={sectionRef} className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-10 md:mb-16">
           <StatCard
             icon="fa-calendar-check"
             value={1000}
             suffix="+"
-            label="Eventos Realizados"
+            label="Eventos"
             isVisible={countersVisible}
           />
           <StatCard
             icon="fa-award"
             value={4}
             suffix=" años"
-            label="De Experiencia"
+            label="Experiencia"
             isVisible={countersVisible}
           />
           <StatCard
             icon="fa-heart"
             value={500}
             suffix="+"
-            label="Clientes Satisfechos"
+            label="Clientes"
             isVisible={countersVisible}
           />
           <StatCard
             icon="fa-map-marker-alt"
             value={0}
             suffix=""
-            label="Valledupar, Cesar"
+            label="Valledupar"
             isVisible={countersVisible}
             isLocation={true}
           />
         </div>
 
         {/* Content Grid - Stack en móvil */}
-        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-12 items-center">
           {/* Left: Text */}
           <div>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">Quiénes Somos</h3>
-            <p className="text-gray-400 text-sm sm:text-base mb-3 sm:mb-4 leading-relaxed">
-              HC Efectos es una empresa especializada en la creación de experiencias visuales únicas para todo tipo de eventos sociales y corporativos. Nos dedicamos a transformar momentos especiales en recuerdos inolvidables mediante el uso de efectos especiales profesionales.
+            <h3 className="text-xl sm:text-2xl md:text-4xl font-bold mb-3 sm:mb-4 md:mb-6">Quiénes Somos</h3>
+            <p className="text-gray-400 text-xs sm:text-sm md:text-base mb-2 sm:mb-3 md:mb-4 leading-relaxed line-clamp-3 md:line-clamp-none">
+              HC Efectos es una empresa especializada en la creación de experiencias visuales únicas para todo tipo de eventos sociales y corporativos.
             </p>
-            <p className="text-gray-400 text-sm sm:text-base mb-4 sm:mb-6 leading-relaxed">
-              <strong className="text-white">Nuestra misión es simple:</strong> que cada momento especial brille con la intensidad que se merece. HC Efectos es sinónimo de excelencia, creatividad y confianza.
+            <p className="text-gray-400 text-xs sm:text-sm md:text-base mb-3 sm:mb-4 md:mb-6 leading-relaxed line-clamp-2 md:line-clamp-none">
+              <strong className="text-white">Nuestra misión:</strong> que cada momento especial brille con la intensidad que se merece.
             </p>
 
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex gap-3 sm:gap-4">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                  <i className="fas fa-shield-alt text-lg sm:text-xl md:text-2xl"></i>
+            <div className="space-y-2 sm:space-y-3 md:space-y-4">
+              <div className="flex gap-2 sm:gap-3 md:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i className="fas fa-shield-alt text-sm sm:text-base md:text-2xl"></i>
                 </div>
                 <div>
-                  <h5 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-2">Seguridad Certificada</h5>
-                  <p className="text-gray-400 text-xs sm:text-sm md:text-base">
-                    Todos nuestros efectos cumplen con protocolos de seguridad internacionales. Equipo certificado, permisos al día y máxima precaución en cada evento.
+                  <h5 className="text-sm sm:text-base md:text-xl font-bold mb-1">Seguridad Certificada</h5>
+                  <p className="text-gray-400 text-xs sm:text-sm md:text-base line-clamp-2 md:line-clamp-none">
+                    Todos nuestros efectos cumplen con protocolos de seguridad internacionales.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-3 sm:gap-4">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                  <i className="fas fa-palette text-lg sm:text-xl md:text-2xl"></i>
+              <div className="flex gap-2 sm:gap-3 md:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i className="fas fa-palette text-sm sm:text-base md:text-2xl"></i>
                 </div>
                 <div>
-                  <h5 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-2">Personalización Total</h5>
-                  <p className="text-gray-400 text-xs sm:text-sm md:text-base">
-                    Cada evento es único. Te asesoramos para crear el efecto perfecto según tu celebración, espacio y presupuesto. Tu visión, nuestra magia.
+                  <h5 className="text-sm sm:text-base md:text-xl font-bold mb-1">Personalización Total</h5>
+                  <p className="text-gray-400 text-xs sm:text-sm md:text-base line-clamp-2 md:line-clamp-none">
+                    Cada evento es único. Te asesoramos para crear el efecto perfecto según tu celebración.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right: Image - Más pequeña en móvil - SIN onLoad */}
-          <div className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border-2 border-purple-600/20 hover:border-purple-600/50 transition-all duration-300">
-            {isMounted && (
-              <Image 
-                src="/img/team.jpg" 
-                alt="Equipo HC Efectos" 
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-500"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                quality={75}
-                priority={false}
-              />
-            )}
+          {/* Right: Image - Más pequeña en móvil */}
+          <div className="relative h-48 sm:h-64 md:h-80 lg:h-[500px] rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-purple-600/20 hover:border-purple-600/50 transition-all duration-300">
+            <Image 
+              src="/img/team.jpg" 
+              alt="Equipo HC Efectos" 
+              fill
+              className="object-cover hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              quality={75}
+              priority={false}
+            />
           </div>
         </div>
       </div>
@@ -125,7 +119,7 @@ export default function AboutSectionSimple() {
   );
 }
 
-// Componente de Estadística Simple - MEJORADO RESPONSIVE
+// Componente de Estadística - ULTRA COMPACTO EN MÓVIL
 interface StatCardProps {
   icon: string;
   value: number;
@@ -159,15 +153,15 @@ function StatCard({ icon, value, suffix, label, isVisible, isLocation = false }:
   }, [isVisible, value, isLocation]);
 
   return (
-    <div className="bg-[#1a1a1a] p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl border border-purple-600/20 hover:border-purple-600 transition-all hover:-translate-y-1 text-center">
-      <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md sm:rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3">
-        <i className={`fas ${icon} text-sm sm:text-base md:text-xl`}></i>
+    <div className="bg-[#1a1a1a] p-2 sm:p-3 md:p-6 rounded-lg border border-purple-600/20 hover:border-purple-600 transition-all hover:-translate-y-1 text-center">
+      <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-md flex items-center justify-center mx-auto mb-1 sm:mb-2 md:mb-3">
+        <i className={`fas ${icon} text-xs sm:text-sm md:text-xl`}></i>
       </div>
-      <div className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
-        {isLocation ? label.split(',')[0] : count}{suffix}
+      <div className="text-base sm:text-xl md:text-3xl font-bold mb-0.5 sm:mb-1">
+        {isLocation ? '' : count}{suffix}
       </div>
-      <div className="text-xs sm:text-sm text-gray-400 leading-tight">
-        {isLocation ? label.split(',')[1] : label}
+      <div className="text-[10px] sm:text-xs md:text-sm text-gray-400 leading-tight">
+        {label}
       </div>
     </div>
   );
