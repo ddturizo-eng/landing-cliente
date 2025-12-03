@@ -97,19 +97,24 @@ img {
   }
 }
 
-/* VIDEO MODAL - OPTIMIZACIÓN MÓVIL */
-@media (max-width: 640px) {
+/* VIDEO REPRODUCTOR - TAMAÑO MÓVIL */
+@media (max-width: 768px) {
   #videoModal {
     padding: 0 !important;
   }
 
-  #videoModal iframe {
-    border-radius: 0 !important;
-  }
-  
+  /* Contenedor del video */
   #videoModal > div {
     width: 100vw !important;
-    height: 100vh !important;
+    max-width: 100vw !important;
+    height: 70vh !important;
+    max-height: 70vh !important;
+  }
+
+  /* Iframe del video */
+  #videoModal iframe {
+    width: 100% !important;
+    height: 100% !important;
   }
 }
 
@@ -870,25 +875,7 @@ img[loading="lazy"].loaded {
   }
 }
 
-/* Video Modal responsivo */
-@media (max-width: 768px) {
-  #videoModal {
-    padding: 1rem;
-  }
-
-  #videoModal .relative {
-    max-width: 100%;
-  }
-
-  #videoModal button {
-    font-size: 2rem;
-  }
-
-  #videoModal #prevVideo,
-  #videoModal #nextVideo {
-    display: none;
-  }
-}
+/* Video Modal responsivo - CONSOLIDATED */
 
 /* WhatsApp button - Responsivo */
 @media (max-width: 480px) {
@@ -1160,56 +1147,95 @@ textarea:focus-visible {
   }
 }
 
-/* Para tablets pequeñas (640px - 768px) */
+/* SMALL TABLETS (640px - 768px) */
 @media (min-width: 641px) and (max-width: 768px) {
   #videoModal {
     padding: 1rem !important;
   }
 
-  #videoModal > div {
+  .video-container-modal {
     width: 95vw !important;
     max-width: 95vw !important;
+    height: auto !important;
+    max-height: 80vh !important;
+  }
+
+  .video-container-modal iframe {
+    aspect-ratio: 16/9 !important;
   }
 }
 
-/* Para tablets y desktop (más de 768px) */
+/* TABLETS & DESKTOP (768px+) */
 @media (min-width: 769px) {
   #videoModal {
     padding: 2rem !important;
   }
 
-  #videoModal > div {
+  .video-container-modal {
     max-width: 1024px !important;
+    height: auto !important;
+  }
+
+  .video-container-modal iframe {
+    aspect-ratio: 16/9 !important;
   }
 }
 
-/* Para pantallas grandes (más de 1280px) */
+/* LARGE SCREENS (1280px+) */
 @media (min-width: 1280px) {
-  #videoModal > div {
+  .video-container-modal {
     max-width: 1280px !important;
-  }
-}
-
-/* Asegurar que el video mantenga aspect ratio correcto en todas las pantallas */
-@media (min-width: 641px) {
-  #videoModal > div > div {
-    padding-bottom: 56.25% !important; /* 16:9 aspect ratio */
   }
 }
 
 /* Mejoras adicionales para la experiencia móvil */
 @media (max-width: 640px) {
+  /* MOBILE VIDEO MODAL - OCUPAR TODA LA PANTALLA VISIBLE */
+  #videoModal {
+    padding: 0 !important;
+    inset: 0 !important;
+  }
+
+  /* Contenedor del video usa dynamic viewport height */
+  .video-container-modal {
+    width: 100% !important;
+    height: 100dvh !important;
+    max-width: 100% !important;
+    max-height: 100dvh !important;
+    padding: 0 !important;
+  }
+
+  /* El iframe ocupa TODO el espacio */
+  .video-container-modal iframe {
+    border-radius: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: auto !important;
+  }
+
+  /* Close button posicionado correctamente */
+  #videoModal button[aria-label="Cerrar modal"] {
+    top: 1rem !important;
+    right: 1rem !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    z-index: 20 !important;
+  }
+
+  /* Mobile navigation buttons */
+  #videoModal .fixed.bottom-6 {
+    bottom: 1.5rem !important;
+    z-index: 11 !important;
+  }
+
+  #videoModal .fixed.bottom-6 button {
+    background: rgba(0, 0, 0, 0.9) !important;
+  }
+
   /* Prevenir scroll en el modal */
   body.no-scroll {
     position: fixed;
     width: 100%;
     overflow: hidden;
-  }
-
-  /* Ocultar la barra de direcciones en iOS Safari al ver video */
-  #videoModal {
-    height: 100vh;
-    height: 100dvh; /* Dynamic viewport height para iOS */
   }
 }
 
