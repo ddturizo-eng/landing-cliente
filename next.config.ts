@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
 
   // CompresiÃ³n y optimizaciÃ³n
   compress: true,
-  staticPageGenerationTimeout: 120,
+ staticPageGenerationTimeout: 180,
 
   // Turbopack config (Next.js 16)
   turbopack: {},

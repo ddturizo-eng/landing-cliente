@@ -1,0 +1,6 @@
+node_modules
+.next
+.git
+*.log
+check-images.js
+optimize-images.js
