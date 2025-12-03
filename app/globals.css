@@ -209,7 +209,224 @@ html {
 body.no-scroll {
   overflow: hidden;
 }
+/* ============================================
+   CUSTOM SCROLLBAR - TEMA PÚRPURA/ROSA
+   ============================================ */
 
+/* Para navegadores WebKit (Chrome, Safari, Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(10, 10, 10, 0.5);
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(10, 10, 10, 0.5);
+  transition: all 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+  border-color: rgba(168, 85, 247, 0.3);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #7e22ce 0%, #be185d 100%);
+}
+
+/* Para Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #a855f7 rgba(10, 10, 10, 0.5);
+}
+
+/* Variante más delgada para móvil */
+@media (max-width: 768px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    border-width: 1px;
+  }
+}
+
+/* ============================================
+   SCROLLBAR GLOBAL PARA TODA LA PÁGINA
+   ============================================ */
+
+/* Body scrollbar */
+body::-webkit-scrollbar {
+  width: 14px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+  border: 3px solid #0a0a0a;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #a855f7 #0a0a0a;
+}
+
+/* ============================================
+   SCROLLBAR PARA SECCIONES ESPECÍFICAS
+   ============================================ */
+
+/* Instagram feed scroll */
+#behold-instagram-feed::-webkit-scrollbar {
+  width: 10px;
+}
+
+#behold-instagram-feed::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.5);
+  border-radius: 10px;
+}
+
+#behold-instagram-feed::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(26, 26, 26, 0.5);
+}
+
+#behold-instagram-feed::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* Quote modal scroll */
+#quoteModal .overflow-y-auto::-webkit-scrollbar {
+  width: 10px;
+}
+
+#quoteModal .overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(10, 10, 10, 0.3);
+  border-radius: 10px;
+}
+
+#quoteModal .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(10, 10, 10, 0.3);
+}
+
+#quoteModal .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* ============================================
+   SCROLLBAR CON ANIMACIÓN SUAVE
+   ============================================ */
+
+.custom-scrollbar-animated::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+  animation: scrollbar-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollbar-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+  }
+}
+
+/* ============================================
+   OCULTAR SCROLLBAR PERO MANTENER FUNCIONALIDAD
+   ============================================ */
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
+/* ============================================
+   SCROLLBAR HORIZONTAL (para filtros en móvil)
+   ============================================ */
+
+.horizontal-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-track {
+  background: rgba(10, 10, 10, 0.5);
+  border-radius: 10px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #9333ea 0%, #db2777 100%);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* ============================================
+   ESTADOS ESPECIALES
+   ============================================ */
+
+/* Scrollbar cuando está en focus/hover del contenedor */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+}
+
+/* Scrollbar para áreas oscuras */
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Scrollbar para áreas claras */
+.light-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   PERFORMANCE & ACCESIBILIDAD
+   ============================================ */
+
+/* Reducir animaciones en modo reduce-motion */
+@media (prefers-reduced-motion: reduce) {
+  .custom-scrollbar::-webkit-scrollbar-thumb,
+  .custom-scrollbar-animated::-webkit-scrollbar-thumb {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Hacer scrollbar más visible en modo alto contraste */
+@media (prefers-contrast: high) {
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #a855f7;
+    border: 2px solid #ffffff;
+  }
+}
 /* ============================================
    NAVBAR STYLES - TRANSPARENTE CON SCROLL
    ============================================ */
