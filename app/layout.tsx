@@ -25,14 +25,33 @@ export const metadata: Metadata = {
   
   // Keywords
   keywords: [
+    // Palabras clave principales + ubicación
+    "HC Efectos",
+    "HC Efectos Valledupar",
     "pirotecnia Valledupar",
+    "efectos especiales Valledupar",
+    
+    // Servicios específicos + ubicación
+    "pirotecnia para bodas Valledupar",
+    "efectos especiales bodas Valledupar",
+    "fuentes frías Valledupar",
+    "humo de colores eventos Valledupar",
+    "pirotecnia XV años Valledupar",
+    "revelación de sexo Valledupar",
+    
+    // Long-tail keywords
+    "pirotecnia profesional eventos Valledupar",
+    "efectos visuales bodas Cesar",
+    "pirotecnia bodas Cesar",
+    "eventos corporativos Valledupar",
+    "proyecciones eventos Valledupar",
+    
+    // Variaciones
+    "pirotecnia eventos",
     "efectos especiales eventos",
-    "bodas Valledupar",
-    "XV años",
-    "revelación de sexo",
-    "eventos corporativos",
-    "fuentes frías",
-    "humo efectos",
+    "fuentes frías bodas",
+    "show pirotécnico",
+    "pirotecnia ceremonias",
   ],
 
   // Información de contacto/ubicación

@@ -179,11 +179,13 @@ function VideoThumbnail({ vimeoId, title }: { vimeoId: string; title: string }) 
   }
 
   return (
-    <img
-      src={thumbnailUrl}
-      alt={title}
-      className="absolute inset-0 w-full h-full object-cover"
-    />
+   <img
+    src={thumbnailUrl}
+    alt={title}
+    className="absolute inset-0 w-full h-full object-cover"
+    loading="lazy"  // 
+    decoding="async" // 
+  />
   );
 }
 
