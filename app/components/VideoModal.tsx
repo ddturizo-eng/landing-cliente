@@ -53,25 +53,16 @@ export default function VideoModal({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, onPrev, onNext, hasNext, hasPrev]);
 
-  // Body scroll lock + prevenir zoom en iOS
+  // Body scroll lock
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = '0';
+      document.body.classList.add('no-scroll');
     } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
+      document.body.classList.remove('no-scroll');
     }
 
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
+      document.body.classList.remove('no-scroll');
     };
   }, [isOpen]);
 
@@ -88,11 +79,11 @@ export default function VideoModal({
   const getVimeoUrl = () => {
     const baseUrl = `https://player.vimeo.com/video/${videoId}`;
     
-    // Parámetros optimizados para móvil - calidad más baja para carga rápida
-    const mobileParams = 'quality=360p&autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0&controls=1';
+    // Parámetros optimizados para móvil
+    const mobileParams = 'quality=360p&autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0';
     
     // Parámetros para desktop
-    const desktopParams = 'quality=720p&autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0&controls=1';
+    const desktopParams = 'quality=720p&autoplay=1&loop=0&autopause=0&byline=0&title=0&portrait=0';
     
     return `${baseUrl}?${isMobile ? mobileParams : desktopParams}`;
   };
@@ -100,131 +91,119 @@ export default function VideoModal({
   return (
     <div
       id="videoModal"
-      className="fixed inset-0 bg-black z-[9999] flex items-center justify-center"
+      className="fixed inset-0 bg-black/98 z-[9999] flex items-center justify-center p-0 sm:p-2 md:p-4"
       onClick={onClose}
-      style={{ 
-        touchAction: 'none',
-        height: '100dvh' // Dynamic viewport height para iOS
-      }}
     >
-      {/* Botón cerrar - MÁS GRANDE Y VISIBLE EN MOBILE */}
+      {/* Close Button */}
       <button
-        className="absolute top-4 right-4 md:top-6 md:right-6 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center text-white hover:text-pink-500 transition-colors z-[10000] bg-black/90 backdrop-blur-sm rounded-full border-2 border-white/30 shadow-2xl active:scale-95"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white hover:text-pink-500 transition-colors z-10 bg-black/60 backdrop-blur-sm rounded-full"
         onClick={onClose}
         aria-label="Cerrar modal"
       >
-        <svg className="w-7 h-7 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+        <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
-      {/* Video Container - PANTALLA COMPLETA EN MOBILE */}
+      {/* Video Container */}
       <div
-        className="relative w-full h-full md:w-[95vw] md:h-auto md:max-w-6xl"
+        className="relative w-full h-full sm:w-[95vw] sm:h-auto md:max-w-5xl lg:max-w-6xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Loading spinner */}
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
-            <div className="text-center px-4">
-              <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
-              <p className="text-white text-base font-semibold mb-2">Cargando video...</p>
-              {isMobile && (
-                <p className="text-gray-400 text-sm">
-                  Calidad optimizada para móvil
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
         {/* Aspect ratio container */}
-        <div 
-          className="relative w-full"
-          style={{ 
-            height: isMobile ? '100vh' : 'auto',
-            paddingBottom: isMobile ? '0' : '56.25%'
-          }}
-        >
+        <div className="relative w-full h-full sm:h-auto" style={{ paddingBottom: typeof window !== 'undefined' && window.innerWidth < 640 ? '0' : '56.25%' }}>
+          {/* Loading spinner */}
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-white text-sm">Cargando video...</p>
+                {isMobile && <p className="text-gray-400 text-xs mt-2">Calidad optimizada para móvil</p>}
+              </div>
+            </div>
+          )}
+
           <iframe
             key={videoId}
             src={videoId ? getVimeoUrl() : ''}
-            className="absolute inset-0 w-full h-full md:rounded-xl"
+            className="absolute inset-0 w-full h-full sm:rounded-lg md:rounded-xl"
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
             onLoad={() => setIsLoading(false)}
-          />
+          ></iframe>
+        </div>
+
+        {/* Info Text - Solo en desktop */}
+        <div className="hidden md:block mt-4 text-center">
+          <p className="text-white/60 text-sm">
+            Usa las flechas del teclado o los botones para navegar
+          </p>
         </div>
       </div>
 
-      {/* Botones de navegación */}
-      {isMobile ? (
-        // Móvil: Botones grandes en la parte inferior
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-6 z-[10000]">
-          {hasPrev && (
-            <button
-              className="w-16 h-16 bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 active:scale-95 transition-all shadow-2xl border-2 border-white/30"
-              onClick={(e) => {
-                e.stopPropagation();
-                onPrev();
-              }}
-              aria-label="Video anterior"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          )}
-
-          {hasNext && (
-            <button
-              className="w-16 h-16 bg-black/90 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 active:scale-95 transition-all shadow-2xl border-2 border-white/30"
-              onClick={(e) => {
-                e.stopPropagation();
-                onNext();
-              }}
-              aria-label="Siguiente video"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          )}
-        </div>
-      ) : (
-        // Desktop: Botones a los lados
-        <>
-          {hasPrev && (
-            <button
-              className="absolute left-8 top-1/2 -translate-y-1/2 w-16 h-16 bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
-              onClick={(e) => {
-                e.stopPropagation();
-                onPrev();
-              }}
-              aria-label="Video anterior"
-            >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          )}
-
-          {hasNext && (
-            <button
-              className="absolute right-8 top-1/2 -translate-y-1/2 w-16 h-16 bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
-              onClick={(e) => {
-                e.stopPropagation();
-                onNext();
-              }}
-              aria-label="Siguiente video"
-            >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          )}
-        </>
+      {/* Navigation Buttons - Desktop */}
+      {hasPrev && (
+        <button
+          className="hidden md:flex absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 backdrop-blur-sm rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
+          onClick={(e) => {
+            e.stopPropagation();
+            onPrev();
+          }}
+          aria-label="Video anterior"
+        >
+          <svg className="w-6 h-6 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
       )}
+
+      {hasNext && (
+        <button
+          className="hidden md:flex absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-14 h-14 lg:w-16 lg:h-16 bg-black/70 backdrop-blur-sm rounded-full items-center justify-center text-white hover:bg-pink-600 hover:scale-110 transition-all shadow-2xl"
+          onClick={(e) => {
+            e.stopPropagation();
+            onNext();
+          }}
+          aria-label="Siguiente video"
+        >
+          <svg className="w-6 h-6 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
+
+      {/* Mobile Navigation - Botones en la parte inferior */}
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4 z-10">
+        {hasPrev && (
+          <button
+            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 active:scale-95 transition-all shadow-2xl border border-white/10"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPrev();
+            }}
+            aria-label="Video anterior"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
+
+        {hasNext && (
+          <button
+            className="w-14 h-14 bg-black/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-pink-600 active:scale-95 transition-all shadow-2xl border border-white/10"
+            onClick={(e) => {
+              e.stopPropagation();
+              onNext();
+            }}
+            aria-label="Siguiente video"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+      </div>
     </div>
   );
 }
