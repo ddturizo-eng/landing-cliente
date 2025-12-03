@@ -1,56 +1,65 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import VideoModal from './VideoModal';
 
 interface Video {
   id: string;
   vimeoId: string;
   title: string;
   category: string;
+  thumbnail: string;
 }
 
 const VIDEOS: Video[] = [
   {
     id: '1',
-    vimeoId: '1133343851',
+    vimeoId: '1133641559',
     title: 'Entrada Épica de Novios',
     category: 'bodas',
+    thumbnail: `https://vumbnail.com/1133641559.jpg`,
   },
   {
     id: '2',
-    vimeoId: '1133343851',
+    vimeoId: '1135898617',
     title: 'Primer Baile sobre Nubes',
     category: 'bodas',
+    thumbnail: `https://vumbnail.com/1135898617.jpg`,
   },
   {
     id: '3',
-    vimeoId: '1133343851',
+    vimeoId: '1135903066',
     title: 'Entrada de Quinceañera',
     category: 'cumpleanos',
+    thumbnail: `https://vumbnail.com/1135903066.jpg`,
   },
   {
     id: '4',
-    vimeoId: '1133343851',
+    vimeoId: '1133639255',
     title: '¡Es Niña! - Revelación Rosa',
     category: 'pirotecnia',
+    thumbnail: `https://vumbnail.com/1133639255.jpg`,
   },
   {
     id: '5',
-    vimeoId: '1133343851',
+    vimeoId: '1135903165',
     title: 'Inauguración Empresarial',
     category: 'corporativo',
+    thumbnail: `https://vumbnail.com/1135903165.jpg`,
   },
   {
     id: '6',
-    vimeoId: '1133343851',
+    vimeoId: '1135898738',
     title: 'Graduación Memorable',
     category: 'corporativo',
+    thumbnail: `https://vumbnail.com/1135898738.jpg`,
   },
   {
     id: '7',
-    vimeoId: '1133343851',
+    vimeoId: '1135898738',
     title: 'Humo de Colores para Eventos',
     category: 'humo',
+    thumbnail: `https://vumbnail.com/1135898738.jpg`,
   },
 ];
 
@@ -63,202 +72,12 @@ const FILTERS = [
   { id: 'corporativo', label: 'Corporativo' },
 ];
 
-// Componente para cargar thumbnails de Vimeo
-function VideoThumbnail({ vimeoId, title }: { vimeoId: string; title: string }) {
-  const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadThumbnail = async () => {
-      try {
-        // Método 1: Intentar con oEmbed API (oficial de Vimeo)
-        const response = await fetch(
-          `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`
-        );
-        
-        if (response.ok && isMounted) {
-          const data = await response.json();
-          if (data.thumbnail_url) {
-            // Obtener thumbnail en alta resolución
-            const highResThumbnail = data.thumbnail_url.replace(/_\d+x\d+/, '_960x540');
-            setThumbnailUrl(highResThumbnail);
-            setIsLoading(false);
-            return;
-          }
-        }
-      } catch (error) {
-        console.log('oEmbed failed, trying fallback method');
-      }
-
-      // Método 2: Fallback con vumbnail.com
-      if (isMounted) {
-        const fallbackUrl = `https://vumbnail.com/${vimeoId}.jpg`;
-        
-        // Verificar si la imagen existe
-        const img = new Image();
-        img.onload = () => {
-          if (isMounted) {
-            setThumbnailUrl(fallbackUrl);
-            setIsLoading(false);
-          }
-        };
-        img.onerror = () => {
-          if (isMounted) {
-            setHasError(true);
-            setIsLoading(false);
-          }
-        };
-        img.src = fallbackUrl;
-      }
-    };
-
-    loadThumbnail();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [vimeoId]);
-
-  if (isLoading) {
-    return (
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-        <div className="animate-pulse">
-          <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
-        </div>
-      </div>
-    );
-  }
-
-  if (hasError || !thumbnailUrl) {
-    return (
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-purple-900 via-pink-900 to-purple-800 flex items-center justify-center">
-        <div className="text-center p-4">
-          <svg className="w-16 h-16 mx-auto mb-3 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p className="text-white/70 text-sm font-medium">{title}</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <img
-      src={thumbnailUrl}
-      alt={title}
-      className="absolute inset-0 w-full h-full object-cover"
-    />
-  );
-}
-
-// Modal del video
-function VideoModal({ 
-  isOpen, 
-  onClose, 
-  videoId, 
-  onPrev, 
-  onNext, 
-  hasNext, 
-  hasPrev 
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  videoId: string;
-  onPrev: () => void;
-  onNext: () => void;
-  hasNext: boolean;
-  hasPrev: boolean;
-}) {
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft' && hasPrev) onPrev();
-      if (e.key === 'ArrowRight' && hasNext) onNext();
-    };
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen, onClose, onPrev, onNext, hasNext, hasPrev]);
-
-  if (!isOpen) return null;
-
-  return (
-    <div 
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      {/* Botón cerrar */}
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-50"
-        aria-label="Cerrar"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      {/* Botón anterior */}
-      {hasPrev && (
-        <button
-          onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          className="absolute left-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-50"
-          aria-label="Video anterior"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-      )}
-
-      {/* Botón siguiente */}
-      {hasNext && (
-        <button
-          onClick={(e) => { e.stopPropagation(); onNext(); }}
-          className="absolute right-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-50"
-          aria-label="Video siguiente"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      )}
-
-      {/* Video iframe */}
-      <div 
-        className="w-full max-w-5xl aspect-video"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <iframe
-          src={`https://player.vimeo.com/video/${videoId}?autoplay=1`}
-          className="w-full h-full rounded-lg"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-    </div>
-  );
-}
-
-// Componente principal
 export default function GallerySection() {
   const [activeFilter, setActiveFilter] = useState('todos');
   const [modalOpen, setModalOpen] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
+  // Memoizar videos filtrados para evitar recalcular
   const filteredVideos = useMemo(() => {
     return activeFilter === 'todos'
       ? VIDEOS
@@ -285,7 +104,7 @@ export default function GallerySection() {
   return (
     <section
       id="galeria"
-      className="min-h-screen bg-black text-white px-4 md:px-8 py-20"
+      className="section min-h-screen bg-black text-white px-4 md:px-8 py-20"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -306,7 +125,7 @@ export default function GallerySection() {
           {FILTERS.map((filter) => (
             <button
               key={filter.id}
-              className={`px-4 md:px-6 py-2 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${
+              className={`filter-btn px-4 md:px-6 py-2 rounded-full text-sm md:text-base font-medium transition-all duration-300 ${
                 activeFilter === filter.id
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 scale-105'
                   : 'bg-gray-800 hover:bg-gray-700'
@@ -323,15 +142,21 @@ export default function GallerySection() {
           {filteredVideos.map((video, index) => (
             <div
               key={video.id}
-              className="group relative aspect-video bg-gray-900 rounded-xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-600/20"
+              className="gallery-card group relative aspect-video bg-gray-900 rounded-xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-600/20"
               onClick={() => handleOpenModal(index)}
             >
-              {/* Thumbnail */}
+              {/* Thumbnail Image con loading lazy nativo */}
               <div className="relative w-full h-full">
-                <VideoThumbnail vimeoId={video.vimeoId} title={video.title} />
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
 
                 {/* Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -346,7 +171,7 @@ export default function GallerySection() {
                   </div>
                 </div>
 
-                {/* Expand Icon */}
+                {/* Expand Icon - Solo desktop */}
                 <button
                   className="hidden md:flex absolute top-4 right-4 w-10 h-10 bg-black/70 rounded-full items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-pink-600 transition-all z-10"
                   onClick={(e) => {
