@@ -1,0 +1,116 @@
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  // OptimizaciÃ³n de imÃ¡genes
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'vumbnail.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.vimeocdn.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'player.vimeo.com',
+        pathname: '/**',
+      },
+    ],
+    
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 31536000,
+    
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+
+  // CompresiÃ³n y optimizaciÃ³n
+  compress: true,
+  staticPageGenerationTimeout: 120,
+
+  // Turbopack config (Next.js 16)
+  turbopack: {},
+
+  // Experimental features
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'react-icons'],
+    scrollRestoration: true,
+  },
+
+  // Headers de seguridad y cache
+  async headers() {
+    return [
+      // Headers globales
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+        ],
+      },
+      // Cache para recursos estÃ¡ticos
+      {
+        source: '/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Cache para imÃ¡genes
+      {
+        source: '/img/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, stale-while-revalidate',
+          },
+        ],
+      },
+      // Cache para fuentes
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+
+  // Configuraciones adicionales
+  reactStrictMode: true,
+  trailingSlash: false,
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+};
+
+export default nextConfig;
