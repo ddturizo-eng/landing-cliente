@@ -33,14 +33,14 @@ export default function EventTypesSimple({ onOpenQuoteModal }: EventTypesSimpleP
       icon: 'fa-crown',
       title: '👑 XV Años',
       description: 'Una noche de ensueño para la quinceañera con efectos dignos de una princesa.',
-      image: '/img/eventos/xv.jpg'
+      image: '/img/fondos/XV1.png'
     },
     {
       id: 'revelaciones',
       icon: 'fa-gift',
       title: '🎉 Revelaciones de Género',
       description: 'El momento más emocionante merece ser épico con explosión de humo de color.',
-      image: '/img/eventos/revelacion.jpg',
+      image: '/img/fondos/REV.jpg',
       popular: true
     },
     {
@@ -48,21 +48,21 @@ export default function EventTypesSimple({ onOpenQuoteModal }: EventTypesSimpleP
       icon: 'fa-building',
       title: '🏢 Eventos Corporativos',
       description: 'Impacta a tus clientes con inauguraciones y lanzamientos espectaculares.',
-      image: '/img/eventos/corporativo.jpg'
+      image: '/img/EventsBack.jpg'
     },
     {
       id: 'institucionales',
       icon: 'fa-graduation-cap',
       title: '🎓 Eventos Institucionales',
       description: 'Graduaciones y ceremonias memorables con efectos seguros y profesionales.',
-      image: '/img/eventos/institucional.jpg'
+      image: '/img/fondos/ins.png'
     },
     {
       id: 'personalizados',
       icon: 'fa-star',
       title: '✨ Eventos Personalizados',
       description: 'Diseñamos paquetes a medida combinando múltiples efectos según tu visión.',
-      image: '/img/eventos/personalizado.jpg'
+      image: '/img/fondos/person.jpg'
     }
   ];
 
