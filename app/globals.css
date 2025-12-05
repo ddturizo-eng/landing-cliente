@@ -64,34 +64,20 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
-  opacity: 1 !important;
 }
 
-/* Next.js Image optimization */
-img[data-nimg],
-.next-image-lazy {
-  opacity: 1 !important;
-  display: block !important;
+/* Next.js Image optimization - SIN opacity ni loaded */
+img[data-nimg] {
+  display: block;
 }
 
 /* Imágenes de Vimeo siempre visibles */
 img[src*="vumbnail.com"],
 img[src*="vimeocdn.com"],
 img[src*="i.vimeocdn.com"] {
-  opacity: 1 !important;
-  display: block !important;
+  display: block;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
-}
-
-/* Lazy loading optimizado - NO afecta Next.js Images */
-img[loading="lazy"]:not([data-nimg]):not(.next-image-lazy) {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-img[loading="lazy"].loaded {
-  opacity: 1;
 }
 
 /* ============================================
@@ -106,7 +92,6 @@ img[loading="lazy"].loaded {
 }
 
 .gallery-card img {
-  opacity: 1 !important;
   transition: transform 0.3s ease;
   will-change: transform;
   background-color: #1a1a1a;
@@ -114,7 +99,6 @@ img[loading="lazy"].loaded {
 
 .gallery-card:hover img {
   transform: scale(1.05);
-  opacity: 1 !important;
 }
 
 .gallery-card.aspect-video {
