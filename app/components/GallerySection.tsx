@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import Image from 'next/image';
 
 interface Video {
   id: string;
@@ -93,55 +94,113 @@ const FILTERS = [
   { id: 'corporativo', label: 'Corporativo' },
 ];
 
-// Componente para cargar thumbnails de Vimeo
-function VideoThumbnail({ vimeoId, title }: { vimeoId: string; title: string }) {
+// ============================================
+// COMPONENTE: VideoThumbnail - COMPLETAMENTE CORREGIDO
+// ============================================
+
+interface VideoThumbnailProps {
+  vimeoId: string;
+  title: string;
+}
+
+function VideoThumbnail({ vimeoId, title }: VideoThumbnailProps) {
   const [thumbnailUrl, setThumbnailUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
+    // Solo ejecutar en el cliente
+    if (typeof window === 'undefined') return;
+    
     let isMounted = true;
+    let timeoutId: NodeJS.Timeout;
 
     const loadThumbnail = async () => {
       try {
-        // Método 1: Intentar con oEmbed API (oficial de Vimeo)
+        // ========================================
+        // MÉTODO 1: Vumbnail (MÁS RÁPIDO)
+        // ========================================
+        const vumbnailUrl = `https://vumbnail.com/${vimeoId}.jpg`;
+        
+        // Crear elemento img del DOM (solo en cliente)
+        const img = document.createElement('img');
+        
+        const loadPromise = new Promise<string>((resolve, reject) => {
+          img.onload = () => {
+            if (isMounted) {
+              console.log(`✅ Thumbnail loaded from vumbnail: ${vimeoId}`);
+              resolve(vumbnailUrl);
+            }
+          };
+          
+          img.onerror = () => {
+            console.log(`⚠️ Vumbnail failed for ${vimeoId}, trying oEmbed...`);
+            reject(new Error('Vumbnail failed'));
+          };
+          
+          img.src = vumbnailUrl;
+        });
+
+        // Timeout de 3 segundos para vumbnail
+        const timeoutPromise = new Promise<string>((_, reject) => {
+          timeoutId = setTimeout(() => {
+            reject(new Error('Vumbnail timeout'));
+          }, 3000);
+        });
+
+        try {
+          const url = await Promise.race([loadPromise, timeoutPromise]);
+          if (isMounted) {
+            setThumbnailUrl(url);
+            setIsLoading(false);
+            setImageLoaded(true);
+          }
+          return;
+        } catch (vumbnailError) {
+          console.log(`Trying oEmbed API for ${vimeoId}...`);
+        }
+
+        // ========================================
+        // MÉTODO 2: oEmbed API (FALLBACK)
+        // ========================================
         const response = await fetch(
-          `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`
+          `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}&width=640`
         );
         
         if (response.ok && isMounted) {
           const data = await response.json();
           if (data.thumbnail_url) {
-            // Obtener thumbnail en alta resolución
-            const highResThumbnail = data.thumbnail_url.replace(/_\d+x\d+/, '_960x540');
+            // Obtener thumbnail en resolución adecuada
+            const highResThumbnail = data.thumbnail_url
+              .replace(/_\d+x\d+/, '_640x360')
+              .replace('_295x166', '_640x360');
+            
+            console.log(`✅ Thumbnail loaded from oEmbed: ${vimeoId}`);
             setThumbnailUrl(highResThumbnail);
             setIsLoading(false);
+            setImageLoaded(true);
             return;
           }
         }
-      } catch (error) {
-        console.log('oEmbed failed, trying fallback method');
-      }
 
-      // Método 2: Fallback con vumbnail.com
-      if (isMounted) {
-        const fallbackUrl = `https://vumbnail.com/${vimeoId}.jpg`;
-        
-        // Verificar si la imagen existe
-        const img = new Image();
-        img.onload = () => {
-          if (isMounted) {
-            setThumbnailUrl(fallbackUrl);
-            setIsLoading(false);
-          }
-        };
-        img.onerror = () => {
-          if (isMounted) {
-            setHasError(true);
-            setIsLoading(false);
-          }
-        };
-        img.src = fallbackUrl;
+        // ========================================
+        // MÉTODO 3: Vimeocdn directo (ÚLTIMO FALLBACK)
+        // ========================================
+        if (isMounted) {
+          const fallbackUrl = `https://i.vimeocdn.com/video/${vimeoId}_640x360.jpg`;
+          console.log(`ℹ️ Using fallback URL for ${vimeoId}`);
+          setThumbnailUrl(fallbackUrl);
+          setIsLoading(false);
+          setImageLoaded(true);
+        }
+
+      } catch (error) {
+        console.error(`❌ Error loading thumbnail for ${vimeoId}:`, error);
+        if (isMounted) {
+          setHasError(true);
+          setIsLoading(false);
+        }
       }
     };
 
@@ -149,47 +208,108 @@ function VideoThumbnail({ vimeoId, title }: { vimeoId: string; title: string }) 
 
     return () => {
       isMounted = false;
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [vimeoId]);
 
+  // ========================================
+  // ESTADO: CARGANDO
+  // ========================================
   if (isLoading) {
     return (
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-        <div className="animate-pulse">
-          <svg className="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          {/* Spinner animado */}
+          <div className="relative w-16 h-16 mx-auto mb-3">
+            <div className="absolute inset-0 border-4 border-purple-500/30 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-400 text-sm font-medium">Cargando...</p>
         </div>
       </div>
     );
   }
 
+  // ========================================
+  // ESTADO: ERROR
+  // ========================================
   if (hasError || !thumbnailUrl) {
     return (
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-purple-900 via-pink-900 to-purple-800 flex items-center justify-center">
+      <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-purple-900/80 via-pink-900/80 to-purple-800/80 flex items-center justify-center">
         <div className="text-center p-4">
-          <svg className="w-16 h-16 mx-auto mb-3 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <p className="text-white/70 text-sm font-medium">{title}</p>
+          {/* Icono de video */}
+          <div className="relative w-20 h-20 mx-auto mb-4">
+            <div className="absolute inset-0 bg-white/10 rounded-full"></div>
+            <svg 
+              className="relative w-full h-full text-white/60 p-4" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={1.5} 
+                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" 
+              />
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={1.5} 
+                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+              />
+            </svg>
+          </div>
+          <p className="text-white/90 text-base font-semibold mb-1">{title}</p>
+          <p className="text-white/60 text-xs">Click para ver</p>
         </div>
       </div>
     );
   }
 
+  // ========================================
+  // ESTADO: IMAGEN CARGADA EXITOSAMENTE
+  // ========================================
   return (
-   <img
-    src={thumbnailUrl}
-    alt={title}
-    className="absolute inset-0 w-full h-full object-cover"
-    loading="lazy"  // 
-    decoding="async" // 
-  />
+    <div className="absolute inset-0 w-full h-full bg-gray-900">
+      <Image
+        src={thumbnailUrl}
+        alt={title}
+        fill
+        className={`object-cover transition-opacity duration-500 ${
+          imageLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        quality={75}
+        priority={false}
+        onLoad={() => setImageLoaded(true)}
+        onError={(e) => {
+          console.error(`❌ Image failed to load: ${thumbnailUrl}`);
+          setHasError(true);
+        }}
+        unoptimized={thumbnailUrl.includes('vumbnail.com')} // vumbnail ya está optimizado
+      />
+      
+      {/* Gradiente overlay sutil */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+    </div>
   );
 }
 
-// Modal del video
+// ============================================
+// COMPONENTE: VideoModal
+// ============================================
+
+interface VideoModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  videoId: string;
+  onPrev: () => void;
+  onNext: () => void;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
 function VideoModal({ 
   isOpen, 
   onClose, 
@@ -198,15 +318,7 @@ function VideoModal({
   onNext, 
   hasNext, 
   hasPrev 
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  videoId: string;
-  onPrev: () => void;
-  onNext: () => void;
-  hasNext: boolean;
-  hasPrev: boolean;
-}) {
+}: VideoModalProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -380,7 +492,10 @@ function VideoModal({
   );
 }
 
-// Componente principal
+// ============================================
+// COMPONENTE PRINCIPAL: GallerySection
+// ============================================
+
 export default function GallerySection() {
   const [activeFilter, setActiveFilter] = useState('todos');
   const [modalOpen, setModalOpen] = useState(false);

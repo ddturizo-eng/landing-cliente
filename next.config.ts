@@ -1,25 +1,31 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // OptimizaciÃ³n de imÃ¡genes
+  // Optimización de imágenes
   images: {
     formats: ['image/avif', 'image/webp'],
     
+    // TODOS los dominios de Vimeo
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'vumbnail.com',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'i.vimeocdn.com',
-        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'player.vimeo.com',
-        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'f.vimeocdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.vimeocdn.com',
       },
     ],
     
@@ -32,23 +38,22 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  // CompresiÃ³n y optimizaciÃ³n
+  // Compresión
   compress: true,
- staticPageGenerationTimeout: 180,
+  staticPageGenerationTimeout: 180,
 
-  // Turbopack config (Next.js 16)
+  // Turbopack
   turbopack: {},
 
-  // Experimental features
+  // Experimental
   experimental: {
     optimizePackageImports: ['lucide-react', 'react-icons'],
     scrollRestoration: true,
   },
 
-  // Headers de seguridad y cache
+  // Headers de seguridad
   async headers() {
     return [
-      // Headers globales
       {
         source: '/(.*)',
         headers: [
@@ -61,42 +66,13 @@ const nextConfig: NextConfig = {
             value: 'SAMEORIGIN',
           },
           {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
           },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
         ],
       },
-      // Cache para recursos estÃ¡ticos
-      {
-        source: '/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      // Cache para imÃ¡genes
       {
         source: '/img/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, stale-while-revalidate',
-          },
-        ],
-      },
-      // Cache para fuentes
-      {
-        source: '/fonts/:path*',
         headers: [
           {
             key: 'Cache-Control',
@@ -107,10 +83,9 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Configuraciones adicionales
   reactStrictMode: true,
   trailingSlash: false,
-  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  poweredByHeader: false,
 };
 
 export default nextConfig;

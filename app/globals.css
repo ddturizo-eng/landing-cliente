@@ -1,184 +1,8 @@
 @import "tailwindcss";
 
-
-/* PERFORMANCE OPTIMIZATIONS */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.gallery-card,
-.service-item,
-.event-card {
-  contain: layout style paint;
-}
-
-.hover-scale {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* REDUCIR ANIMACIONES EN MÓVIL */
-@media (max-width: 768px) {
-  .animate-pulse {
-    animation: none !important;
-  }
-  
-  .gallery-card:hover {
-    transform: scale(1.01) !important;
-    transition: transform 0.2s ease !important;
-  }
-  
-  /* Eliminar backdrop-blur en móvil (muy costoso) */
-  .backdrop-blur-sm {
-    backdrop-filter: none !important;
-    background-color: rgba(0, 0, 0, 0.9) !important;
-  }
-  
-  .backdrop-blur-md {
-    backdrop-filter: none !important;
-    background-color: rgba(0, 0, 0, 0.95) !important;
-  }
-  
-  .bg-gradient-to-r,
-  .bg-gradient-to-br {
-    animation: none !important;
-  }
-
-  /* Reducir blur de fondos decorativos */
-  #eventos .absolute {
-    opacity: 0.3 !important;
-  }
-}
-
-/* PREFERS REDUCED MOTION */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  
-  html {
-    scroll-behavior: auto !important;
-  }
-}
-
-/* LAZY LOADING OPTIMIZADO */
-img[loading="lazy"] {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-img[loading="lazy"].loaded {
-  opacity: 1;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
-/* CURSOR CUSTOM - SOLO DESKTOP */
-@media (min-width: 769px) {
-  .cursor-dot,
-  .cursor-outline {
-    will-change: transform;
-    transform: translateZ(0);
-  }
-  
-  .spark-particle {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-  }
-}
-
-/* VIDEO REPRODUCTOR - TAMAÑO MÓVIL */
-@media (max-width: 768px) {
-  #videoModal {
-    padding: 0 !important;
-  }
-
-  /* Contenedor del video */
-  #videoModal > div {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    height: 70vh !important;
-    max-height: 70vh !important;
-  }
-
-  /* Iframe del video */
-  #videoModal iframe {
-    width: 100% !important;
-    height: 100% !important;
-  }
-}
-
-/* INSTAGRAM WIDGET - OPTIMIZACIÓN */
-#behold-instagram-feed {
-  min-height: 400px;
-}
-
-@media (max-width: 768px) {
-  #behold-instagram-feed {
-    max-height: 600px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* ANIMACIONES OPTIMIZADAS CON TRANSFORM */
-.animate-slideUp {
-  animation: slideUp 0.3s ease-out;
-  will-change: transform, opacity;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 30px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* GALLERY OPTIMIZATIONS */
-.gallery-card {
-  contain: layout style paint;
-  will-change: transform;
-}
-
-.gallery-card img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-/* LOADING SKELETON */
-.loading-skeleton {
-  background: linear-gradient(
-    90deg,
-    #1a1a1a 25%,
-    #2a2a2a 50%,
-    #1a1a1a 75%
-  );
-  background-size: 200% 100%;
-  animation: loading 1.5s ease-in-out infinite;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
+/* ============================================
+   VARIABLES Y TEMA
+   ============================================ */
 
 :root {
   --background: #ffffff;
@@ -199,75 +23,145 @@ img {
   }
 }
 
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Scroll suave */
 html {
   scroll-behavior: smooth;
 }
 
-/* Ocultar scroll cuando modal está abierto */
-body.no-scroll {
+body.no-scroll,
+body.modal-open {
   overflow: hidden;
 }
-/* ============================================
-   CUSTOM SCROLLBAR - TEMA PÚRPURA/ROSA
-   ============================================ */
 
-/* Para navegadores WebKit (Chrome, Safari, Edge) */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 12px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(10, 10, 10, 0.5);
-  border-radius: 10px;
-  margin: 4px 0;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
-  border-radius: 10px;
-  border: 2px solid rgba(10, 10, 10, 0.5);
-  transition: all 0.3s ease;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
-  border-color: rgba(168, 85, 247, 0.3);
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: linear-gradient(180deg, #7e22ce 0%, #be185d 100%);
-}
-
-/* Para Firefox */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #a855f7 rgba(10, 10, 10, 0.5);
-}
-
-/* Variante más delgada para móvil */
-@media (max-width: 768px) {
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    border-width: 1px;
+/* Mobile scroll lock fix */
+@media (max-width: 640px) {
+  body.no-scroll {
+    position: fixed;
+    width: 100%;
   }
 }
 
 /* ============================================
-   SCROLLBAR GLOBAL PARA TODA LA PÁGINA
+   IMÁGENES - OPTIMIZADAS Y SIN CONFLICTOS
    ============================================ */
 
-/* Body scrollbar */
+/* Todas las imágenes visibles por defecto */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  opacity: 1 !important;
+}
+
+/* Next.js Image optimization */
+img[data-nimg],
+.next-image-lazy {
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* Imágenes de Vimeo siempre visibles */
+img[src*="vumbnail.com"],
+img[src*="vimeocdn.com"],
+img[src*="i.vimeocdn.com"] {
+  opacity: 1 !important;
+  display: block !important;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Lazy loading optimizado - NO afecta Next.js Images */
+img[loading="lazy"]:not([data-nimg]):not(.next-image-lazy) {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* ============================================
+   GALLERY SECTION
+   ============================================ */
+
+.gallery-card {
+  contain: layout style paint;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.gallery-card img {
+  opacity: 1 !important;
+  transition: transform 0.3s ease;
+  will-change: transform;
+  background-color: #1a1a1a;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.05);
+  opacity: 1 !important;
+}
+
+.gallery-card.aspect-video {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+/* Gallery z-index fix */
+.gallery-card > div:first-child {
+  position: relative;
+  z-index: 1;
+}
+
+.gallery-card .absolute.inset-0 {
+  z-index: 2;
+}
+
+.gallery-card .absolute.inset-0.flex {
+  z-index: 3;
+}
+
+/* Gallery filters mobile */
+@media (max-width: 640px) {
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  #galeria .flex-wrap {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  #galeria .flex-wrap::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADA
+   ============================================ */
+
+/* Body scrollbar principal */
 body::-webkit-scrollbar {
   width: 14px;
 }
@@ -292,88 +186,36 @@ body {
   scrollbar-color: #a855f7 #0a0a0a;
 }
 
-/* ============================================
-   SCROLLBAR PARA SECCIONES ESPECÍFICAS
-   ============================================ */
-
-/* Instagram feed scroll */
-#behold-instagram-feed::-webkit-scrollbar {
-  width: 10px;
+/* Custom scrollbar class */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
 }
 
-#behold-instagram-feed::-webkit-scrollbar-track {
-  background: rgba(26, 26, 26, 0.5);
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(10, 10, 10, 0.5);
   border-radius: 10px;
+  margin: 4px 0;
 }
 
-#behold-instagram-feed::-webkit-scrollbar-thumb {
+.custom-scrollbar::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
   border-radius: 10px;
-  border: 2px solid rgba(26, 26, 26, 0.5);
+  border: 2px solid rgba(10, 10, 10, 0.5);
+  transition: all 0.3s ease;
 }
 
-#behold-instagram-feed::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+  border-color: rgba(168, 85, 247, 0.3);
   box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
 }
 
-/* Quote modal scroll */
-#quoteModal .overflow-y-auto::-webkit-scrollbar {
-  width: 10px;
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #a855f7 rgba(10, 10, 10, 0.5);
 }
 
-#quoteModal .overflow-y-auto::-webkit-scrollbar-track {
-  background: rgba(10, 10, 10, 0.3);
-  border-radius: 10px;
-}
-
-#quoteModal .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
-  border-radius: 10px;
-  border: 2px solid rgba(10, 10, 10, 0.3);
-}
-
-#quoteModal .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-}
-
-/* ============================================
-   SCROLLBAR CON ANIMACIÓN SUAVE
-   ============================================ */
-
-.custom-scrollbar-animated::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
-  border-radius: 10px;
-  animation: scrollbar-pulse 2s ease-in-out infinite;
-}
-
-@keyframes scrollbar-pulse {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-  }
-}
-
-/* ============================================
-   OCULTAR SCROLLBAR PERO MANTENER FUNCIONALIDAD
-   ============================================ */
-
-.hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari, Opera */
-}
-
-/* ============================================
-   SCROLLBAR HORIZONTAL (para filtros en móvil)
-   ============================================ */
-
+/* Horizontal scrollbar */
 .horizontal-scroll::-webkit-scrollbar {
   height: 6px;
 }
@@ -393,59 +235,25 @@ body {
   box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
 }
 
-/* ============================================
-   ESTADOS ESPECIALES
-   ============================================ */
-
-/* Scrollbar cuando está en focus/hover del contenedor */
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+/* Hide scrollbar utility */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Scrollbar para áreas oscuras */
-.dark-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-/* Scrollbar para áreas claras */
-.light-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* ============================================
-   PERFORMANCE & ACCESIBILIDAD
-   ============================================ */
-
-/* Reducir animaciones en modo reduce-motion */
-@media (prefers-reduced-motion: reduce) {
-  .custom-scrollbar::-webkit-scrollbar-thumb,
-  .custom-scrollbar-animated::-webkit-scrollbar-thumb {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Hacer scrollbar más visible en modo alto contraste */
-@media (prefers-contrast: high) {
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #a855f7;
-    border: 2px solid #ffffff;
-  }
-}
-/* ============================================
-   NAVBAR STYLES - TRANSPARENTE CON SCROLL
+   NAVBAR
    ============================================ */
 
 .navigation {
   transition: all 0.3s ease;
-}
-
-/* Navbar al inicio - Completamente transparente */
-.navigation {
   background: transparent;
 }
 
-/* Navbar scrolled effect - Sólido con backdrop blur */
 .navigation.scrolled {
   background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(12px);
@@ -453,13 +261,11 @@ body {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* Active menu item */
 .active-menu {
   color: #ec4899 !important;
   font-weight: 600;
 }
 
-/* Mejorar contraste de links en navbar transparente */
 .navigation a,
 .navigation span {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
@@ -471,37 +277,7 @@ body {
   text-shadow: none;
 }
 
-/* Mobile menu siempre con fondo sólido */
-.navigation + div {
-  background: rgba(0, 0, 0, 0.98);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(236, 72, 153, 0.1);
-}
-
-/* Mobile menu */
-@media (max-width: 768px) {
-  .nav-items {
-    display: none;
-  }
-
-  .nav-items.mobile-active {
-    display: flex;
-  }
-
-  .mobile-menu-toggle {
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .mobile-menu-toggle:hover {
-    color: #ec4899;
-  }
-}
-
-/* Asegurar que el navbar sea legible sobre cualquier fondo */
 @media (min-width: 769px) {
-  /* En desktop, gradiente sutil para legibilidad */
   .navigation:not(.scrolled) {
     background: linear-gradient(
       180deg,
@@ -512,7 +288,6 @@ body {
   }
 }
 
-/* Animación suave al aparecer el navbar */
 .navigation {
   animation: slideDown 0.5s ease-out;
 }
@@ -529,61 +304,25 @@ body {
 }
 
 /* ============================================
-   HERO IMAGE OVERLAY
+   CUSTOM CURSOR (SOLO DESKTOP)
    ============================================ */
 
-/* Hero image overlay */
-.hero-image-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.95);
-  z-index: 9998;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.hero-image-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.active-image {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) scale(1.5) !important;
-  z-index: 9999 !important;
-  cursor: zoom-out !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  max-width: 90vw !important;
-  max-height: 90vh !important;
-}
-
-
-/* ============================================
-   CUSTOM CURSOR - EFECTO PIROTECNIA
-   ============================================ */
-
-/* Solo en desktop */
 @media (min-width: 769px) {
-  /* Ocultar cursor del sistema */
   * {
     cursor: none !important;
   }
 
-  /* Optimización para animaciones del cursor */
   body {
     cursor: none !important;
   }
 
-  /* Los elementos del cursor se manejan directamente en el componente React */
+  .spark-particle {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
 }
 
-/* EN MÓVIL Y TABLET: Cursor normal */
 @media (max-width: 768px) {
   * {
     cursor: auto !important;
@@ -599,26 +338,13 @@ body {
 }
 
 /* ============================================
-   OPTIMIZACIONES DE RENDIMIENTO
-   ============================================ */
-
-/* Prevenir parpadeo en las animaciones del cursor */
-@media (min-width: 769px) {
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* Optimizar rendering de las chispas */
-  .spark-particle {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-}
-/* ============================================
    ANIMACIONES
    ============================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 @keyframes fadeInUp {
   from {
@@ -631,306 +357,21 @@ body {
   }
 }
 
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-.gallery-card {
-  animation: fadeInUp 0.6s ease forwards;
-}
-
-.gallery-card.hidden {
-  display: none;
-}
-
-/* Smooth transitions */
-.section {
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-/* Video modal transitions */
-#videoModal,
-#quoteModal {
-  transition: opacity 0.3s ease;
-}
-
-#videoModal.active,
-#quoteModal.active {
-  opacity: 1;
-}
-
-/* ============================================
-   LAZY LOADING IMAGES
-   ============================================ */
-
-img[loading="lazy"] {
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-img[loading="lazy"].loaded {
-  opacity: 1;
-}
-
-/* ============================================
-   RESPONSIVE FIXES
-   ============================================ */
-
-/* Hero section - Stack vertical en mobile */
-@media (max-width: 768px) {
-  .header-content h1 {
-    font-size: 2.5rem;
-    line-height: 1.1;
-  }
-
-  .header-content p {
-    font-size: 1rem;
-  }
-
-  /* Botones responsivos */
-  .header-content > div {
-    gap: 0.5rem;
-    flex-direction: column;
-  }
-
-  .header-content button {
-    width: 100%;
-  }
-
-  /* Right hero content - Ocultar en mobile o hacer stack */
-  .right-h-content {
-    display: none;
-  }
-
-  /* O si quieres mostrar, hacer stack vertical */
-  .right-h-content {
-    position: relative !important;
-    height: auto !important;
-    margin-top: 2rem;
-  }
-
-  .right-h-content img {
-    position: relative !important;
-    width: 100% !important;
-    height: auto !important;
-    margin-bottom: 1rem !important;
-    left: 0 !important;
-    top: 0 !important;
-    z-index: 1 !important;
-  }
-}
-
-/* About section - Stack en mobile */
-@media (max-width: 768px) {
-  #nosotros .grid {
-    grid-template-columns: 1fr;
-  }
-
-  #nosotros h3 {
-    font-size: 2rem;
-  }
-
-  #nosotros .relative {
-    height: 300px;
-  }
-}
-
-/* Services section - 1 columna en mobile */
-@media (max-width: 768px) {
-  #efectos .grid {
-    grid-template-columns: 1fr;
-  }
-
-  #efectos h3 {
-    font-size: 2rem;
-  }
-
-  .service-item {
-    padding: 1rem;
-  }
-
-  .service-item h4 {
-    font-size: 1.1rem;
-  }
-
-  .service-item p {
-    font-size: 0.9rem;
-  }
-}
-
-/* Gallery section - 1-2 columnas en mobile */
-@media (max-width: 640px) {
-  #galeria .grid {
-    grid-template-columns: 1fr;
-  }
-
-  #galeria h2 {
-    font-size: 2rem;
-  }
-
-  /* Botones filtro más pequeños */
-  .filter-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-  }
-}
-
-@media (min-width: 641px) and (max-width: 768px) {
-  #galeria .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Events section - 1-2 columnas en mobile */
-@media (max-width: 640px) {
-  #eventos .grid {
-    grid-template-columns: 1fr;
-  }
-
-  #eventos h3 {
-    font-size: 2rem;
-  }
-
-  .bg-\[\#0a0a0a\].rounded-2xl {
-    margin-bottom: 1rem;
-  }
-}
-
-@media (min-width: 641px) and (max-width: 768px) {
-  #eventos .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Instagram section - Responsivo */
-@media (max-width: 768px) {
-  #instagram h3 {
-    font-size: 2rem;
-  }
-
-  #instagram p {
-    font-size: 0.9rem;
-  }
-}
-
-/* Footer - Responsive */
-@media (max-width: 768px) {
-  footer {
-    padding: 2rem 1rem;
-  }
-
-  footer .grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  footer h3,
-  footer h4 {
-    font-size: 1.1rem;
-  }
-
-  footer ul,
-  footer li {
-    font-size: 0.9rem;
-  }
-
-  /* Social links en mobile */
-  footer .flex {
-    justify-content: center;
-  }
-}
-
-/* Modal responsivo */
-@media (max-width: 640px) {
-  #quoteModal .bg-gradient-to-br {
-    max-width: 95vw;
-    padding: 1.5rem;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  #quoteModal h2 {
-    font-size: 1.5rem;
-  }
-
-  #quoteModal form {
-    gap: 1rem;
-  }
-
-  #quoteModal input,
-  #quoteModal select,
-  #quoteModal textarea {
-    padding: 0.75rem;
-    font-size: 16px; /* Previene zoom en iOS */
-  }
-
-  #quoteModal button {
-    padding: 0.75rem;
-    font-size: 1rem;
-  }
-}
-
-/* Video Modal responsivo - CONSOLIDATED */
-
-/* WhatsApp button - Responsivo */
-@media (max-width: 480px) {
-  .fixed.bottom-6.right-6 {
-    width: 56px;
-    height: 56px;
-    bottom: 1rem;
-    right: 1rem;
-  }
-
-  .fixed.bottom-6.right-6 i {
-    font-size: 1.5rem;
-  }
-}
-/* EVENTOS FONDO*/
-
-/* Patrón radial para fondo de eventos */
-.bg-gradient-radial-pattern {
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
-  background-size: 100% 100%;
-  animation: pulse-gradient 8s ease-in-out infinite;
-}
-
-@keyframes pulse-gradient {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-
-/* ============================================
-   EFFECTS SECTION ANIMATIONS
-   ============================================ */
-
-/* Fade in animation for modal backdrop */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Slide up animation for modal content */
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
   }
   to {
     opacity: 1;
@@ -938,112 +379,14 @@ img[loading="lazy"].loaded {
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.animate-slideUp {
-  animation: slideUp 0.3s ease-out;
-}
-
-/* Line clamp utility (para limitar texto a 2 líneas) */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Smooth hover effects para las tarjetas */
-.group:hover .group-hover\:scale-110 {
-  transform: scale(1.1);
-}
-
-.group:hover .group-hover\:gap-3 {
-  gap: 0.75rem;
-}
-
-/* Prevenir scroll cuando modal está abierto */
-body.modal-open {
-  overflow: hidden;
-}
-
-/* Mejorar el rendering del video iframe */
-iframe {
-  border: none;
-  display: block;
-}
-
-/* Responsive adjustments para el modal */
-@media (max-width: 768px) {
-  .animate-slideUp {
-    animation: slideUp 0.2s ease-out;
+@keyframes statPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.4);
   }
 }
-
-/* Asegurar que el z-index del modal sea mayor que el navbar */
-[class*="z-[100]"] {
-  z-index: 100;
-}
-
-/* Optimizar animaciones para dispositivos móviles */
-@media (prefers-reduced-motion: reduce) {
-  .animate-fadeIn,
-  .animate-slideUp {
-    animation: none !important;
-  }
-}
-
-
-/* ============================================
-   ACCESIBILIDAD
-   ============================================ */
-
-/* Focus visible para navegación por teclado */
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid #ec4899;
-  outline-offset: 2px;
-}
-
-/* Reduce motion para usuarios que lo prefieren */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  html {
-    scroll-behavior: auto;
-  }
-
-
-/* ============================================
-   VIDEO GALLERY OPTIMIZATIONS
-   ============================================ */
-
-/* Mejor rendimiento en las tarjetas de video */
-.gallery-card {
-  will-change: transform;
-  contain: layout style paint;
-}
-
-.gallery-card:hover {
-  will-change: transform;
-}
-
-/* Thumbnails optimizados */
-.gallery-card img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-/* Animaciones para AboutSectionImproved y EventTypesSection */
 
 @keyframes gradient-x {
   0%, 100% {
@@ -1087,6 +430,34 @@ textarea:focus-visible {
   }
 }
 
+@keyframes pulse-gradient {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Animation classes */
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+  will-change: transform, opacity;
+}
+
 .animate-gradient-x {
   background-size: 200% 200%;
   animation: gradient-x 3s ease infinite;
@@ -1103,47 +474,91 @@ textarea:focus-visible {
 .animate-float-fast {
   animation: float-fast 2s ease-in-out infinite;
 }
+
+.gallery-card {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.gallery-card.hidden {
+  display: none;
+}
+
 /* ============================================
-   VIDEO MODAL MOBILE IMPROVEMENTS
+   MODALES
    ============================================ */
 
-/* En móvil, el modal ocupa TODA la pantalla */
+#videoModal,
+#quoteModal {
+  transition: opacity 0.3s ease;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+iframe {
+  border: none;
+  display: block;
+}
+
+/* Quote Modal scrollbar */
+#quoteModal .overflow-y-auto::-webkit-scrollbar {
+  width: 10px;
+}
+
+#quoteModal .overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(10, 10, 10, 0.3);
+  border-radius: 10px;
+}
+
+#quoteModal .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(10, 10, 10, 0.3);
+}
+
+#quoteModal .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* ============================================
+   VIDEO MODAL - RESPONSIVE
+   ============================================ */
+
+/* MOBILE - Pantalla completa */
 @media (max-width: 640px) {
   #videoModal {
     padding: 0 !important;
+    inset: 0 !important;
   }
 
-  /* Contenedor del video usa todo el alto de la pantalla */
-  #videoModal > div {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
+  .video-container-modal {
+    width: 100% !important;
+    height: 100dvh !important;
+    max-width: 100% !important;
+    max-height: 100dvh !important;
+    padding: 0 !important;
   }
 
-  /* El iframe ocupa todo el espacio disponible */
-  #videoModal iframe {
+  .video-container-modal iframe {
     border-radius: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    aspect-ratio: auto !important;
   }
 
-  /* Ajustar posición del botón cerrar para que no tape */
   #videoModal button[aria-label="Cerrar modal"] {
     top: 1rem !important;
     right: 1rem !important;
     background: rgba(0, 0, 0, 0.8) !important;
-    backdrop-filter: blur(10px) !important;
     z-index: 20 !important;
   }
 
-  /* Botones de navegación más visibles */
   #videoModal .fixed.bottom-6 {
     bottom: 1.5rem !important;
+    z-index: 11 !important;
   }
 
   #videoModal .fixed.bottom-6 button {
     background: rgba(0, 0, 0, 0.9) !important;
-    backdrop-filter: blur(10px) !important;
   }
 }
 
@@ -1188,130 +603,294 @@ textarea:focus-visible {
   }
 }
 
-/* Mejoras adicionales para la experiencia móvil */
-@media (max-width: 640px) {
-  /* MOBILE VIDEO MODAL - OCUPAR TODA LA PANTALLA VISIBLE */
-  #videoModal {
-    padding: 0 !important;
-    inset: 0 !important;
-  }
-
-  /* Contenedor del video usa dynamic viewport height */
-  .video-container-modal {
-    width: 100% !important;
-    height: 100dvh !important;
-    max-width: 100% !important;
-    max-height: 100dvh !important;
-    padding: 0 !important;
-  }
-
-  /* El iframe ocupa TODO el espacio */
-  .video-container-modal iframe {
-    border-radius: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    aspect-ratio: auto !important;
-  }
-
-  /* Close button posicionado correctamente */
-  #videoModal button[aria-label="Cerrar modal"] {
-    top: 1rem !important;
-    right: 1rem !important;
-    background: rgba(0, 0, 0, 0.8) !important;
-    z-index: 20 !important;
-  }
-
-  /* Mobile navigation buttons */
-  #videoModal .fixed.bottom-6 {
-    bottom: 1.5rem !important;
-    z-index: 11 !important;
-  }
-
-  #videoModal .fixed.bottom-6 button {
-    background: rgba(0, 0, 0, 0.9) !important;
-  }
-
-  /* Prevenir scroll en el modal */
-  body.no-scroll {
-    position: fixed;
-    width: 100%;
-    overflow: hidden;
-  }
-}
-
-/* Animación suave al abrir/cerrar el modal */
-#videoModal {
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 /* ============================================
-   HERO SECTION STATS ANIMATIONS
+   RESPONSIVE - MOBILE
    ============================================ */
 
-/* Animación suave para los números */
-@keyframes countUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Pulse effect para stats */
-@keyframes statPulse {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(236, 72, 153, 0.4);
-  }
-}
-
-/* ============================================
-   GALLERY FILTERS MOBILE
-   ============================================ */
-
-@media (max-width: 640px) {
-  .filter-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    white-space: nowrap;
+@media (max-width: 768px) {
+  .animate-pulse {
+    animation: none !important;
   }
 
-  /* Scroll horizontal para filtros si son muchos */
-  #galeria .flex-wrap {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    justify-content: flex-start;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Firefox */
+  .backdrop-blur-sm {
+    backdrop-filter: none !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
   }
 
-  #galeria .flex-wrap::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+  .backdrop-blur-md {
+    backdrop-filter: none !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
   }
-}
 
-/* ============================================
-   PERFORMANCE OPTIMIZATIONS
-   ============================================ */
-
-/* Reducir animaciones en dispositivos de bajo rendimiento */
-@media (prefers-reduced-motion: reduce) {
   .gallery-card {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .gallery-card:active {
+    transform: scale(0.98);
+  }
+
+  .gallery-card:hover {
+    transform: scale(1.01) !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  /* Play button más grande en móvil */
+  .gallery-card .video-play-button > div {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  /* Reducir blur de fondos decorativos */
+  #eventos .absolute {
+    opacity: 0.3 !important;
+  }
+
+  .bg-gradient-to-r,
+  .bg-gradient-to-br {
+    animation: none !important;
+  }
+}
+
+/* Hero section mobile */
+@media (max-width: 768px) {
+  .header-content h1 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+
+  .header-content p {
+    font-size: 1rem;
+  }
+
+  .header-content > div {
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .header-content button {
+    width: 100%;
+  }
+}
+
+/* About section mobile */
+@media (max-width: 768px) {
+  #nosotros .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #nosotros h3 {
+    font-size: 2rem;
+  }
+
+  #nosotros .relative {
+    height: 300px;
+  }
+}
+
+/* Services section mobile */
+@media (max-width: 768px) {
+  #efectos .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #efectos h3 {
+    font-size: 2rem;
+  }
+
+  .service-item {
+    padding: 1rem;
+  }
+
+  .service-item h4 {
+    font-size: 1.1rem;
+  }
+
+  .service-item p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Gallery section mobile */
+@media (max-width: 640px) {
+  #galeria .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #galeria h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  #galeria .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Events section mobile */
+@media (max-width: 640px) {
+  #eventos .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #eventos h3 {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  #eventos .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Instagram section mobile */
+@media (max-width: 768px) {
+  #instagram h3 {
+    font-size: 2rem;
+  }
+
+  #instagram p {
+    font-size: 0.9rem;
+  }
+}
+
+#behold-instagram-feed {
+  min-height: 400px;
+}
+
+@media (max-width: 768px) {
+  #behold-instagram-feed {
+    max-height: 600px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+#behold-instagram-feed::-webkit-scrollbar {
+  width: 10px;
+}
+
+#behold-instagram-feed::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.5);
+  border-radius: 10px;
+}
+
+#behold-instagram-feed::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a855f7 0%, #ec4899 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(26, 26, 26, 0.5);
+}
+
+#behold-instagram-feed::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9333ea 0%, #db2777 100%);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* Footer mobile */
+@media (max-width: 768px) {
+  footer {
+    padding: 2rem 1rem;
+  }
+
+  footer .grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  footer h3,
+  footer h4 {
+    font-size: 1.1rem;
+  }
+
+  footer ul,
+  footer li {
+    font-size: 0.9rem;
+  }
+
+  footer .flex {
+    justify-content: center;
+  }
+}
+
+/* Quote modal mobile */
+@media (max-width: 640px) {
+  #quoteModal .bg-gradient-to-br {
+    max-width: 95vw;
+    padding: 1.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  #quoteModal h2 {
+    font-size: 1.5rem;
+  }
+
+  #quoteModal form {
+    gap: 1rem;
+  }
+
+  #quoteModal input,
+  #quoteModal select,
+  #quoteModal textarea {
+    padding: 0.75rem;
+    font-size: 16px;
+  }
+
+  #quoteModal button {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* WhatsApp button mobile */
+@media (max-width: 480px) {
+  .fixed.bottom-6.right-6 {
+    width: 56px;
+    height: 56px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .fixed.bottom-6.right-6 i {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #ec4899;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .gallery-card img {
     transition: none !important;
+  }
+
+  .gallery-card:hover img {
+    transform: none !important;
   }
 
   @keyframes countUp {
@@ -1322,48 +901,26 @@ textarea:focus-visible {
   }
 }
 
-/* Lazy loading mejor comportamiento */
-img[loading="lazy"] {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
-
-img[loading="lazy"].loaded {
-  opacity: 1;
-}
-
-/* Prevenir flash de contenido sin estilo */
-.gallery-card img {
-  background-color: #1a1a1a;
-}
-
-/* ============================================
-   TOUCH IMPROVEMENTS FOR MOBILE
-   ============================================ */
-
-@media (max-width: 768px) {
-  /* Hacer botones más grandes para touch */
-  .gallery-card {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Mejor feedback táctil */
-  .gallery-card:active {
-    transform: scale(0.98);
-  }
-
-  /* Play button más grande en móvil */
-  .gallery-card .video-play-button > div {
-    width: 4rem;
-    height: 4rem;
+@media (prefers-contrast: high) {
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #a855f7;
+    border: 2px solid #ffffff;
   }
 }
 
 /* ============================================
-   ASPECT RATIO FIXES
+   UTILITIES
    ============================================ */
 
-/* Asegurar aspect ratio correcto en todos los navegadores */
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Aspect ratio polyfill */
 .aspect-video {
   aspect-ratio: 16 / 9;
 }
@@ -1382,4 +939,73 @@ img[loading="lazy"].loaded {
     width: 100%;
     height: 100%;
   }
-}}
+}
+
+/* Loading skeleton */
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 25%,
+    #2a2a2a 50%,
+    #1a1a1a 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+/* Background gradient pattern */
+.bg-gradient-radial-pattern {
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+  background-size: 100% 100%;
+  animation: pulse-gradient 8s ease-in-out infinite;
+}
+
+/* Hero image overlay */
+.hero-image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.hero-image-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.active-image {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(1.5) !important;
+  z-index: 9999 !important;
+  cursor: zoom-out !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+
+/* Performance optimizations */
+.service-item,
+.event-card {
+  contain: layout style paint;
+}
+
+.hover-scale {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Section transitions */
+.section {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
