@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 
 export default function AboutSectionSimple() {
   const [countersVisible, setCountersVisible] = useState(false);
+  const [imageVisible, setImageVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -19,6 +20,24 @@ export default function AboutSectionSimple() {
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setImageVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (imageRef.current) {
+      observer.observe(imageRef.current);
     }
 
     return () => observer.disconnect();
@@ -99,19 +118,25 @@ export default function AboutSectionSimple() {
             </div>
           </div>
 
-          {/* Right: Image - Más pequeña en móvil */}
-          <div className="relative h-48 sm:h-64 md:h-80 lg:h-[500px] rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-purple-600/20 group">
-            <Image 
-              src="/img/team.jpg" 
-              alt="Equipo HC Efectos" 
-              fill
-              className="object-cover transition-transform duration-500"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              quality={75}
-              priority={false}
+          {/* Right: Image - Más pequeña en móvil con lazy loading */}
+          <div 
+            ref={imageRef}
+            className="relative h-48 sm:h-64 md:h-80 lg:h-[500px] rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-purple-600/20 hover:border-purple-600/50 transition-all duration-300 group"
+          >
+            <div 
+              className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ${
+                imageVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+              } group-hover:scale-105`}
+              style={{ 
+                backgroundImage: imageVisible ? 'url(/img/logo-hc-efectos-white.jpg)' : 'none',
+                backgroundColor: '#1a0a2e'
+              }}
             />
-            {/* Hover effect como overlay separado */}
-            <div className="absolute inset-0 transition-all duration-300 group-hover:bg-transparent"></div>
+            {!imageVisible && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/20 to-pink-900/20">
+                <div className="w-12 h-12 border-4 border-purple-600/30 border-t-purple-600 rounded-full animate-spin"></div>
+              </div>
+            )}
           </div>
         </div>
       </div>

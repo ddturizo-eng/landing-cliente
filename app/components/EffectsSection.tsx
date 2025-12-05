@@ -120,6 +120,7 @@ function EffectModal({ effect, isOpen, onClose, onQuote }: EffectModalProps) {
 
 export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps) {
   const [selectedEffect, setSelectedEffect] = useState<Effect | null>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
 
   const effects: Effect[] = [
     {
@@ -174,6 +175,11 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
     }
   ];
 
+  // Preload primeras 2 imágenes
+  const handleImageLoad = (id: string) => {
+    setLoadedImages(prev => new Set(prev).add(id));
+  };
+
   return (
     <>
       <section id="efectos" className="section py-8 sm:py-12 md:py-20 px-4 sm:px-6 md:px-8 bg-black relative overflow-hidden">
@@ -214,18 +220,21 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
               >
                 {/* Thumbnail Background con imagen de fondo */}
                 <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gradient-to-br from-purple-900/30 to-pink-900/30">
-                  {/* Imagen de fondo semi-transparente - usando img nativa para evitar hidratación */}
-                  <div className="absolute inset-0 w-full h-full">
+                  {/* Imagen de fondo semi-transparente con lazy loading */}
+                  <div className="absolute inset-0 w-full h-full opacity-30">
                     <img
                       src={effect.thumbnail}
                       alt={effect.name}
-                      className="w-full h-full object-cover transition-all duration-500"
-                      style={{ opacity: 0.3 }}
-                      loading={index === 0 ? 'eager' : 'lazy'}
+                      loading={index < 2 ? 'eager' : 'lazy'}
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${
+                        loadedImages.has(effect.id) ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      onLoad={() => handleImageLoad(effect.id)}
+                      decoding="async"
                     />
-                    {/* Overlay degradado para mejor legibilidad */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
                   </div>
+                  {/* Overlay degradado para mejor legibilidad */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
                   
                   {/* Ícono sobre la imagen */}
                   <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
