@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 
 interface EffectsSectionProps {
   onOpenQuoteModal: () => void;
@@ -214,32 +213,28 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Thumbnail Background con imagen de fondo */}
-                <div className="relative h-32 sm:h-40 md:h-48 bg-gradient-to-br from-purple-900/30 to-pink-900/30 overflow-hidden">
-                  {/* Imagen de fondo semi-transparente */}
-                  <div className="absolute inset-0">
-                    <Image
+                <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gradient-to-br from-purple-900/30 to-pink-900/30">
+                  {/* Imagen de fondo semi-transparente - usando img nativa para evitar hidratación */}
+                  <div className="absolute inset-0 w-full h-full">
+                    <img
                       src={effect.thumbnail}
                       alt={effect.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      style={{ objectFit: 'cover' }}
-                      className="opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500"
-                      priority={index < 3}
-                      quality={75}
-                      unoptimized={false}
+                      className="w-full h-full object-cover transition-all duration-500"
+                      style={{ opacity: 0.3 }}
+                      loading={index === 0 ? 'eager' : 'lazy'}
                     />
                     {/* Overlay degradado para mejor legibilidad */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
                   </div>
                   
                   {/* Ícono sobre la imagen */}
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <i className={`${effect.icon} text-4xl sm:text-5xl md:text-7xl opacity-60 group-hover:scale-110 transition-transform duration-300 text-white drop-shadow-2xl`}></i>
+                  <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                    <i className={`${effect.icon} text-4xl sm:text-5xl md:text-7xl text-white transition-transform duration-300`} style={{ opacity: 0.6, filter: 'drop-shadow(0 20px 25px rgb(0 0 0 / 0.5))' }}></i>
                   </div>
                   
-                  {/* Play overlay */}
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-2xl shadow-purple-600/50">
+                  {/* Play overlay - solo en hover */}
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center" style={{ boxShadow: '0 20px 25px -5px rgb(168 85 247 / 0.5)' }}>
                       <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>

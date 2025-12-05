@@ -7,8 +7,6 @@ export default function AboutSectionSimple() {
   const [countersVisible, setCountersVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -102,16 +100,18 @@ export default function AboutSectionSimple() {
           </div>
 
           {/* Right: Image - Más pequeña en móvil */}
-          <div className="relative h-48 sm:h-64 md:h-80 lg:h-[500px] rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-purple-600/20 hover:border-purple-600/50 transition-all duration-300">
+          <div className="relative h-48 sm:h-64 md:h-80 lg:h-[500px] rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-purple-600/20 group">
             <Image 
               src="/img/team.jpg" 
               alt="Equipo HC Efectos" 
               fill
-              className="object-cover hover:scale-105 transition-transform duration-500"
+              className="object-cover transition-transform duration-500"
               sizes="(max-width: 768px) 100vw, 50vw"
               quality={75}
               priority={false}
             />
+            {/* Hover effect como overlay separado */}
+            <div className="absolute inset-0 transition-all duration-300 group-hover:bg-transparent"></div>
           </div>
         </div>
       </div>
