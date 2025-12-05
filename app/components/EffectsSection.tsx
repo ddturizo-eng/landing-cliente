@@ -222,8 +222,11 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
                       alt={effect.name}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500"
+                      style={{ objectFit: 'cover' }}
+                      className="opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500"
                       priority={index < 3}
+                      quality={75}
+                      unoptimized={false}
                     />
                     {/* Overlay degradado para mejor legibilidad */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
