@@ -62,7 +62,7 @@ function EffectModal({ effect, isOpen, onClose, onQuote }: EffectModalProps) {
           />
         </div>
 
-        {/* Content Section - MÁS COMPACTO */}
+        {/* Content Section */}
         <div className="p-3 sm:p-4 md:p-6 overflow-y-auto flex-1 min-h-0 custom-scrollbar">
           {/* Icon + Title */}
           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
@@ -129,9 +129,9 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       icon: 'fas fa-fire-flame-curved',
       shortDesc: 'Cascadas de chispas brillantes sin calor para momentos mágicos',
       fullDesc: 'Las fuentes frías son cascadas de chispas brillantes que no generan calor. Perfectas para bodas, quinceañeras e inauguraciones. Crean un efecto visual espectacular de hasta 3 metros de altura, ideales para la entrada de novios, el primer baile o cualquier momento especial. Completamente seguras para uso en interiores y exteriores.',
-      vimeoId: '1141715261',
+      vimeoId: '1133639422',
       tags: ['Bodas', 'XV Años', 'Inauguraciones'],
-      thumbnail: '/img/efectos/fuentes-frias.jpg'
+      thumbnail: '/img/efectos/fuentesf.jpg'
     },
     {
       id: 'niebla-baja',
@@ -139,9 +139,9 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       icon: 'fas fa-cloud',
       shortDesc: 'Efecto de nubes a ras del suelo para un ambiente cinematográfico',
       fullDesc: 'Crea la ilusión de bailar sobre las nubes con nuestro efecto de niebla baja. Esta técnica especial genera una capa densa de niebla que permanece a ras del suelo, perfecta para el primer baile de bodas o presentaciones elegantes. El efecto dura varios minutos y garantiza fotografías y videos espectaculares con un ambiente romántico y cinematográfico.',
-      vimeoId: '1141715261',
+      vimeoId: '1133639330',
       tags: ['Bodas', 'XV Años', 'Eventos Elegantes'],
-      thumbnail: '/img/efectos/niebla-baja.jpg'
+      thumbnail: '/img/efectos/nieblabaja.png'
     },
     {
       id: 'pirotecnia-aerea',
@@ -149,9 +149,9 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       icon: 'fas fa-burst',
       shortDesc: 'Espectáculo de luces en el cielo para eventos al aire libre',
       fullDesc: 'Llena el cielo de color y emoción con nuestra pirotecnia aérea profesional. Espectáculos pirotécnicos sincronizados que iluminan la noche con cascadas de luz, destellos brillantes y efectos espectaculares. Ideal para bodas, aniversarios, fiestas empresariales y eventos públicos. Cada show está cuidadosamente coordinado para ofrecer máxima seguridad y un impacto visual inolvidable.',
-      vimeoId: '1141715261',
+      vimeoId: '1135903066',
       tags: ['Bodas', 'Eventos Corporativos', 'Celebraciones'],
-      thumbnail: '/img/efectos/pirotecnia.jpg'
+      thumbnail: '/img/efectos/piro.jpg'
     },
     {
       id: 'ventury',
@@ -159,7 +159,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       icon: 'fas fa-wind',
       shortDesc: 'Columnas de CO2 que disparan hasta 8 metros de altura',
       fullDesc: 'Los cañones Ventury generan impresionantes columnas de CO2 frío que disparan hasta 8 metros de altura. Perfectos para momentos de alto impacto como entradas espectaculares, drops en eventos musicales, lanzamientos de productos o cualquier momento que requiera un efecto dramático. El CO2 se disipa rápidamente sin dejar residuos, siendo completamente seguro y creando un impacto visual inolvidable.',
-      vimeoId: '1141715261',
+      vimeoId: '1143668674',
       tags: ['Eventos Corporativos', 'Conciertos', 'Inauguraciones'],
       thumbnail: '/img/efectos/ventury.jpg'
     },
@@ -169,9 +169,9 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       icon: 'fas fa-gift',
       shortDesc: 'Explosión de color para el momento más emocionante',
       fullDesc: 'Celebra uno de los momentos más esperados con una explosión espectacular de humo de color. Combinamos fuentes frías, confeti y humo de color (rosa o azul) para crear un instante mágico lleno de sorpresa y alegría. El efecto es sincronizado para máximo impacto, creando el momento perfecto para fotos y videos que durarán toda la vida. Incluye opciones de personalización según tus preferencias.',
-      vimeoId: '1141715261',
+      vimeoId: '1143149062',
       tags: ['Revelaciones', 'Baby Shower', 'Celebraciones Familiares'],
-      thumbnail: '/img/efectos/revelacion.jpg'
+      thumbnail: '/img/efectos/revelacionsex.jpg'
     }
   ];
 
@@ -213,14 +213,30 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
                 className="group relative bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded-lg sm:rounded-xl overflow-hidden border border-purple-600/20 hover:border-purple-500 transition-all duration-300 cursor-pointer hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/30"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Thumbnail Background - MÁS PEQUEÑO EN MOBILE */}
+                {/* Thumbnail Background con imagen de fondo */}
                 <div className="relative h-32 sm:h-40 md:h-48 bg-gradient-to-br from-purple-900/30 to-pink-900/30 overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <i className={`${effect.icon} text-4xl sm:text-5xl md:text-7xl opacity-30 group-hover:scale-110 transition-transform duration-300 text-white`}></i>
+                  {/* Imagen de fondo semi-transparente */}
+                  <div className="absolute inset-0">
+                    <Image
+                      src={effect.thumbnail}
+                      alt={effect.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover opacity-30 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500"
+                      priority={index < 3}
+                    />
+                    {/* Overlay degradado para mejor legibilidad */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
                   </div>
+                  
+                  {/* Ícono sobre la imagen */}
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <i className={`${effect.icon} text-4xl sm:text-5xl md:text-7xl opacity-60 group-hover:scale-110 transition-transform duration-300 text-white drop-shadow-2xl`}></i>
+                  </div>
+                  
                   {/* Play overlay */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-2xl shadow-purple-600/50">
                       <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>
