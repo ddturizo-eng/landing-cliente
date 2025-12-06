@@ -1,8 +1,15 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
-import { QuoteModalProps } from '../types';
-import { CONFIG, EFECTOS_ESPECIALES, TIPOS_EVENTOS } from '../lib/config';
+import { QuoteModalProps, EfectoConCantidad } from '../types';
+import { 
+  CONFIG, 
+  EFECTOS_ESPECIALES, 
+  TIPOS_EVENTOS,
+  EFECTOS_POR_EVENTO,
+  NOMBRES_EVENTOS,
+  permiteCantidad
+} from '../lib/config';
 import { 
   formatearFecha, 
   generarURLWhatsapp,
@@ -11,7 +18,7 @@ import {
 } from '../lib/utils';
 import CalendarPicker from './CalendarPicker';
 
-export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
+export default function QuoteModal({ isOpen, onClose, preselectedEventType }: QuoteModalProps) {
   const [formData, setFormData] = useState({
     nombre: '',
     telefono: '',
@@ -22,7 +29,7 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     horaEvento: '',
     ubicacionEvento: '',
     comentarios: '',
-    efectos: [] as string[],
+    efectos: [] as EfectoConCantidad[],
   });
 
   const [showCalendar, setShowCalendar] = useState(false);
@@ -41,6 +48,41 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     const today = new Date();
     return today.toISOString().split('T')[0];
   };
+
+  // Precargar datos cuando se selecciona un evento desde las tarjetas
+  useEffect(() => {
+    if (isOpen && preselectedEventType) {
+      const tipoEvento = NOMBRES_EVENTOS[preselectedEventType] || '';
+      const efectosPredilectos = EFECTOS_POR_EVENTO[preselectedEventType] || [];
+      
+      // Convertir efectos a formato con cantidad
+      const efectosConCantidad: EfectoConCantidad[] = efectosPredilectos.map(efecto => ({
+        nombre: efecto,
+        cantidad: permiteCantidad(efecto) ? 2 : 1, // Cantidad por defecto: 2 para efectos con cantidad
+        permiteCantidad: permiteCantidad(efecto)
+      }));
+      
+      setFormData((prev) => ({
+        ...prev,
+        tipoEvento,
+        efectos: efectosConCantidad
+      }));
+    } else if (!isOpen) {
+      // Reset form cuando se cierra
+      setFormData({
+        nombre: '',
+        telefono: '',
+        email: '',
+        ciudad: '',
+        tipoEvento: '',
+        fechaEvento: '',
+        horaEvento: '',
+        ubicacionEvento: '',
+        comentarios: '',
+        efectos: [],
+      });
+    }
+  }, [isOpen, preselectedEventType]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -74,13 +116,49 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCheckboxChange = (efecto: string) => {
+  const handleCheckboxChange = (nombreEfecto: string) => {
     setFormData((prev) => {
-      const efectos = prev.efectos.includes(efecto)
-        ? prev.efectos.filter((e) => e !== efecto)
-        : [...prev.efectos, efecto];
-      return { ...prev, efectos };
+      const efectoExiste = prev.efectos.find(e => e.nombre === nombreEfecto);
+      
+      if (efectoExiste) {
+        // Remover efecto
+        return {
+          ...prev,
+          efectos: prev.efectos.filter(e => e.nombre !== nombreEfecto)
+        };
+      } else {
+        // Agregar efecto
+        const nuevoEfecto: EfectoConCantidad = {
+          nombre: nombreEfecto,
+          cantidad: permiteCantidad(nombreEfecto) ? 2 : 1,
+          permiteCantidad: permiteCantidad(nombreEfecto)
+        };
+        return {
+          ...prev,
+          efectos: [...prev.efectos, nuevoEfecto]
+        };
+      }
     });
+  };
+
+  const handleCantidadChange = (nombreEfecto: string, nuevaCantidad: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      efectos: prev.efectos.map(efecto => 
+        efecto.nombre === nombreEfecto 
+          ? { ...efecto, cantidad: Math.max(1, nuevaCantidad) }
+          : efecto
+      )
+    }));
+  };
+
+  const isEfectoSeleccionado = (nombreEfecto: string): boolean => {
+    return formData.efectos.some(e => e.nombre === nombreEfecto);
+  };
+
+  const getCantidadEfecto = (nombreEfecto: string): number => {
+    const efecto = formData.efectos.find(e => e.nombre === nombreEfecto);
+    return efecto?.cantidad || 1;
   };
 
   const handleDateSelect = (date: string) => {
@@ -146,7 +224,11 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     
     mensaje += '\n✨ *EFECTOS ESPECIALES SOLICITADOS*\n';
     formData.efectos.forEach((efecto, index) => {
-      mensaje += `${index + 1}. ${efecto}\n`;
+      if (efecto.permiteCantidad) {
+        mensaje += `${index + 1}. ${efecto.nombre} (x${efecto.cantidad})\n`;
+      } else {
+        mensaje += `${index + 1}. ${efecto.nombre}\n`;
+      }
     });
     
     if (formData.comentarios) {
@@ -162,18 +244,6 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     // Cerrar modal y resetear formulario
     setTimeout(() => {
       onClose();
-      setFormData({
-        nombre: '',
-        telefono: '',
-        email: '',
-        ciudad: '',
-        tipoEvento: '',
-        fechaEvento: '',
-        horaEvento: '',
-        ubicacionEvento: '',
-        comentarios: '',
-        efectos: [],
-      });
     }, 500);
   };
 
@@ -206,7 +276,9 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
           </span>
         </h2>
         <p className="text-gray-400 text-center mb-6 text-sm">
-          Completa el formulario y nos pondremos en contacto contigo
+          {preselectedEventType 
+            ? `Formulario precargado para ${NOMBRES_EVENTOS[preselectedEventType]}` 
+            : 'Completa el formulario y nos pondremos en contacto contigo'}
         </p>
 
         {/* Form */}
@@ -348,24 +420,60 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
             <h3 className="text-lg font-semibold mb-3 text-pink-500 flex items-center gap-2">
               <i className="fas fa-magic"></i>
               Efectos Especiales Deseados *
+              {preselectedEventType && formData.efectos.length > 0 && (
+                <span className="text-xs font-normal text-green-400 ml-2">
+                  ✓ Preseleccionados para este evento
+                </span>
+              )}
             </h3>
-            <div className="grid md:grid-cols-2 gap-2">
-              {EFECTOS_ESPECIALES.map((efecto) => (
-                <label
-                  key={efecto}
-                  className="flex items-center space-x-2 cursor-pointer hover:text-pink-500 transition text-sm"
-                >
-                  <input
-                    type="checkbox"
-                    name="efectos"
-                    value={efecto}
-                    checked={formData.efectos.includes(efecto)}
-                    onChange={() => handleCheckboxChange(efecto)}
-                    className="w-4 h-4 accent-pink-500"
-                  />
-                  <span>{efecto}</span>
-                </label>
-              ))}
+            <div className="space-y-2">
+              {EFECTOS_ESPECIALES.map((efecto) => {
+                const isChecked = isEfectoSeleccionado(efecto);
+                const permiteCant = permiteCantidad(efecto);
+                const cantidad = getCantidadEfecto(efecto);
+
+                return (
+                  <div
+                    key={efecto}
+                    className="flex items-center justify-between bg-black/30 p-3 rounded-lg border border-gray-700/50 hover:border-pink-500/30 transition"
+                  >
+                    <label className="flex items-center space-x-3 cursor-pointer flex-1">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => handleCheckboxChange(efecto)}
+                        className="w-4 h-4 accent-pink-500"
+                      />
+                      <span className="text-sm">{efecto}</span>
+                    </label>
+
+                    {/* Control de Cantidad */}
+                    {permiteCant && isChecked && (
+                      <div className="flex items-center gap-2 ml-4">
+                        <button
+                          type="button"
+                          onClick={() => handleCantidadChange(efecto, cantidad - 1)}
+                          disabled={cantidad <= 1}
+                          className="w-7 h-7 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:opacity-50 rounded-md flex items-center justify-center transition"
+                        >
+                          <i className="fas fa-minus text-xs"></i>
+                        </button>
+                        <span className="w-8 text-center font-semibold text-pink-500">
+                          {cantidad}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleCantidadChange(efecto, cantidad + 1)}
+                          disabled={cantidad >= 20}
+                          className="w-7 h-7 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:opacity-50 rounded-md flex items-center justify-center transition"
+                        >
+                          <i className="fas fa-plus text-xs"></i>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 

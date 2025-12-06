@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 interface EventTypesSimpleProps {
-  onOpenQuoteModal: () => void;
+  onOpenQuoteModal: (eventType?: string) => void;
 }
 
 interface EventType {
@@ -14,6 +14,7 @@ interface EventType {
   description: string;
   image: string;
   popular?: boolean;
+  efectosPredilectos?: string[];
 }
 
 export default function EventTypesSimple({ onOpenQuoteModal }: EventTypesSimpleProps) {
@@ -26,14 +27,16 @@ export default function EventTypesSimple({ onOpenQuoteModal }: EventTypesSimpleP
       title: '💍 Bodas',
       description: 'Haz de tu boda un cuento de hadas con fuentes frías, niebla baja y pirotecnia.',
       image: '/img/Heroback.jpg',
-      popular: true
+      popular: true,
+      efectosPredilectos: ['Fuentes Frías', 'Niebla Baja', 'Pirotecnia']
     },
     {
       id: 'xv-anos',
       icon: 'fa-crown',
       title: '👑 XV Años',
       description: 'Una noche de ensueño para la quinceañera con efectos dignos de una princesa.',
-      image: '/img/fondos/XV1.png'
+      image: '/img/fondos/XV1.png',
+      efectosPredilectos: ['Fuentes Frías', 'Luces LED', 'Máquina de Humo', 'Pirotecnia']
     },
     {
       id: 'revelaciones',
@@ -41,28 +44,32 @@ export default function EventTypesSimple({ onOpenQuoteModal }: EventTypesSimpleP
       title: '🎉 Revelaciones de Género',
       description: 'El momento más emocionante merece ser épico con explosión de humo de color.',
       image: '/img/fondos/REV.jpg',
-      popular: true
+      popular: true,
+      efectosPredilectos: ['Humo de Color', 'Confeti', 'Pirotecnia']
     },
     {
       id: 'corporativos',
       icon: 'fa-building',
       title: '🏢 Eventos Corporativos',
       description: 'Impacta a tus clientes con inauguraciones y lanzamientos espectaculares.',
-      image: '/img/EventsBack.jpg'
+      image: '/img/EventsBack.jpg',
+      efectosPredilectos: ['Pirotecnia', 'Luces LED', 'Máquina de Humo', 'Lanzador de Confeti']
     },
     {
       id: 'institucionales',
       icon: 'fa-graduation-cap',
       title: '🎓 Eventos Institucionales',
       description: 'Graduaciones y ceremonias memorables con efectos seguros y profesionales.',
-      image: '/img/fondos/ins.png'
+      image: '/img/fondos/ins.png',
+      efectosPredilectos: ['Lanzador de Confeti', 'Fuentes Frías', 'Luces LED']
     },
     {
       id: 'personalizados',
       icon: 'fa-star',
       title: '✨ Eventos Personalizados',
       description: 'Diseñamos paquetes a medida combinando múltiples efectos según tu visión.',
-      image: '/img/fondos/person.jpg'
+      image: '/img/fondos/person.jpg',
+      efectosPredilectos: []
     }
   ];
 
@@ -125,7 +132,7 @@ export default function EventTypesSimple({ onOpenQuoteModal }: EventTypesSimpleP
 
                 {/* Button - SIEMPRE VISIBLE EN MOBILE */}
                 <button
-                  onClick={onOpenQuoteModal}
+                  onClick={() => onOpenQuoteModal(event.id)}
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-2 sm:py-2.5 rounded-lg font-semibold text-xs sm:text-sm hover:shadow-lg hover:shadow-pink-600/50 transition-all flex items-center justify-center gap-2"
                 >
                   Cotizar
@@ -142,7 +149,7 @@ export default function EventTypesSimple({ onOpenQuoteModal }: EventTypesSimpleP
             ¿No encuentras lo que buscas? Contáctanos para crear algo único
           </p>
           <button
-            onClick={onOpenQuoteModal}
+            onClick={() => onOpenQuoteModal()}
             className="bg-gradient-to-r from-purple-600 to-pink-600 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-full font-semibold text-xs sm:text-sm md:text-lg hover:scale-105 transition-all shadow-lg shadow-pink-600/30 inline-flex items-center gap-2"
           >
             <i className="fas fa-comments text-sm sm:text-base"></i>

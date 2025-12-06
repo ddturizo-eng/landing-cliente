@@ -63,9 +63,10 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">Servicios</h4>
             <ul className="space-y-2">
               <li className="text-gray-400">Pirotecnia</li>
-              <li className="text-gray-400">Efectos de Humo</li>
-              <li className="text-gray-400">Confeti</li>
+              <li className="text-gray-400">Reveleaciones</li>
+              <li className="text-gray-400">Ventury</li>
               <li className="text-gray-400">Proyecciones</li>
+              <li className="text-gray-400">Fuentes frias</li>
               <li className="text-gray-400">Niebla baja</li>
             </ul>
           </div>
@@ -82,8 +83,8 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2 text-gray-400">
                 <i className="fas fa-envelope text-pink-500"></i>
-                <a href="mailto:info@hcefectos.com" className="hover:text-pink-500 transition">
-                  info@hcefectos.com
+                <a href="mailto:hcefectos1@gmail.com" className="hover:text-pink-500 transition">
+                  hcefectos1@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-2 text-gray-400">
@@ -94,13 +95,7 @@ export default function Footer() {
 
             {/* Social Media */}
             <div className="flex gap-4 mt-4">
-              <a
-                href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-600 transition"
-                aria-label="Facebook"
-              >
-                <i className="fab fa-facebook-f"></i>
-              </a>
+             
               <a
                 href="#"
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-600 transition"

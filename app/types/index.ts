@@ -2,6 +2,12 @@
  * Tipos TypeScript para el proyecto HC Efectos
  */
 
+export interface EfectoConCantidad {
+  nombre: string;
+  cantidad: number;
+  permiteCantidad: boolean;
+}
+
 export interface QuoteFormData {
   nombre: string;
   telefono: string;
@@ -13,7 +19,7 @@ export interface QuoteFormData {
   ubicacionEvento?: string;
   numInvitados?: string;
   comentarios?: string;
-  efectos: string[];
+  efectos: EfectoConCantidad[];
 }
 
 export interface GalleryVideo {
@@ -57,4 +63,5 @@ export interface VideoModalProps {
 export interface QuoteModalProps {
   isOpen: boolean;
   onClose: () => void;
+  preselectedEventType?: string;
 }

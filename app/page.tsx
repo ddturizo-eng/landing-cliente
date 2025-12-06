@@ -66,11 +66,14 @@ const InstagramGrid = dynamic(() => import('./components/InstagramGrid'), {
   ),
   ssr: false,
 });
+
 // Hooks optimizados
 import { useOptimizedAnimations } from './hooks/useOptimizedAnimations';
 
 export default function Home() {
+  // ✅ Estados actualizados para manejar el tipo de evento
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [selectedEventType, setSelectedEventType] = useState<string | undefined>();
   const [showWhatsApp, setShowWhatsApp] = useState(false);
 
   useOptimizedAnimations();
@@ -90,134 +93,148 @@ export default function Home() {
     return () => document.body.classList.remove('no-scroll');
   }, [quoteModalOpen]);
 
+  // ✅ Función para abrir el modal con tipo de evento específico
+  const handleOpenQuoteModal = (eventType?: string) => {
+    setSelectedEventType(eventType);
+    setQuoteModalOpen(true);
+  };
+
+  // ✅ Función para cerrar el modal y limpiar el estado
+  const handleCloseQuoteModal = () => {
+    setQuoteModalOpen(false);
+    setSelectedEventType(undefined);
+  };
+
   return (
     <>
       <CustomCursor />
 
       <div className="min-h-screen bg-[#0a0a0a] text-white">
         {/* Navbar */}
-        <Navbar onOpenQuoteModal={() => setQuoteModalOpen(true)} />
+        <Navbar onOpenQuoteModal={() => handleOpenQuoteModal()} />
 
         {/* Hero Section */}
-        <HeroSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
+        <HeroSection onOpenQuoteModal={() => handleOpenQuoteModal()} />
 
         {/* Effects Section */}
-        <EffectsSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
+        <EffectsSection onOpenQuoteModal={() => handleOpenQuoteModal()} />
 
         {/* About Section */}
         <AboutSectionImproved />
 
-        {/* Event Types Section */}
-        <EventTypesSection onOpenQuoteModal={() => setQuoteModalOpen(true)} />
+        {/* Event Types Section -pasa la función correcta */}
+        <EventTypesSection onOpenQuoteModal={handleOpenQuoteModal} />
 
         {/* Gallery Section */}
         <GallerySection />
 
-       <section id="eventos" className="section py-8 sm:py-12 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden bg-black">
-  {/* Fondo con gradiente */}
-  <div className="absolute inset-0 z-0">
-    <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-[#1a1a1a] to-pink-900/20"></div>
-    <div className="absolute top-20 left-[10%] w-64 h-64 bg-purple-600/20 rounded-full blur-[100px] animate-pulse"></div>
-    <div className="absolute bottom-32 right-[15%] w-80 h-80 bg-pink-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-  </div>
+        <section id="eventos" className="section py-8 sm:py-12 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden bg-black">
+          {/* Fondo con gradiente */}
+          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-[#1a1a1a] to-pink-900/20"></div>
+            <div className="absolute top-20 left-[10%] w-64 h-64 bg-purple-600/20 rounded-full blur-[100px] animate-pulse"></div>
+            <div className="absolute bottom-32 right-[15%] w-80 h-80 bg-pink-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+          </div>
 
-  <div className="max-w-7xl mx-auto relative z-10">
-    <div className="text-center mb-6 sm:mb-10 md:mb-12">
-      <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 md:mb-4 drop-shadow-lg">
-        Eventos Destacados
-      </h3>
-      <p className="text-gray-300 text-xs sm:text-sm md:text-base max-w-2xl mx-auto drop-shadow-md px-4">
-        Conoce algunos de los momentos mágicos que hemos creado para nuestros clientes.
-      </p>
-    </div>
-
-    {/* Grid MÁS COMPACTO EN MOBILE */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-      {[
-        { img: 'bodatop.jpg', icon: 'fa-ring', type: 'Boda', date: 'Mar 2025', title: 'Boda Elegante en Casa Campestre' },
-        { img: 'XV.png', icon: 'fa-crown', type: 'XV Años', date: 'Sep 2024', title: 'Quinceaños de Ensueño' },
-        { img: 'conciert.png', icon: 'fa-building', type: 'Conciertos', date: 'Ago 2024', title: 'Efectos en concierto de Antonio Eslait' },
-        { img: 'Humorosa.jpg', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Oct 2025', title: 'Revelación de Sexo Emocionante' },
-        { img: 'lajuma.png', icon: 'fa-video', type: 'Video cancion', date: 'ene 2024', title: 'Efectos especiales de La Banda Del 5' },
-        { img: 'INa-1.png', icon: 'fa-bomb', type: 'Inauguracion', date: 'Ago 2025', title: 'Inauguración Inolvidable' }
-      ].map((event, index) => (
-        <div 
-          key={index} 
-          className="bg-black/70 backdrop-blur-md rounded-lg sm:rounded-xl overflow-hidden border border-purple-600/30 hover:border-purple-500 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/30"
-        >
-          {/* Imagen MÁS PEQUEÑA EN MOBILE */}
-          <div className="relative h-44 sm:h-48 md:h-56 overflow-hidden">
-            <Image 
-              src={`/img/eventos/${event.img}`}
-              alt={event.title}
-              fill
-              className="object-cover hover:scale-110 transition duration-500"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              loading="lazy"
-              quality={75}
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-2 sm:p-3 md:p-4 flex justify-between items-center">
-              <div className="flex items-center gap-1 sm:gap-2">
-                <i className={`fas ${event.icon} text-pink-500 text-xs sm:text-sm`}></i>
-                <span className="text-xs sm:text-sm font-semibold">{event.type}</span>
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2">
-                <i className="fas fa-calendar text-pink-500 text-xs sm:text-sm"></i>
-                <span className="text-xs sm:text-sm">{event.date}</span>
-              </div>
+          <div className="max-w-7xl mx-auto relative z-10">
+            <div className="text-center mb-6 sm:mb-10 md:mb-12">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 md:mb-4 drop-shadow-lg">
+                Eventos Destacados
+              </h3>
+              <p className="text-gray-300 text-xs sm:text-sm md:text-base max-w-2xl mx-auto drop-shadow-md px-4">
+                Conoce algunos de los momentos mágicos que hemos creado para nuestros clientes.
+              </p>
             </div>
-          </div>
-          
-          {/* Contenido MÁS COMPACTO */}
-          <div className="p-2 sm:p-3 md:p-4">
-            <h4 className="font-bold text-sm sm:text-base md:text-lg mb-1 sm:mb-2 line-clamp-1">
-              {event.title}
-            </h4>
-            <p className="text-gray-400 text-xs sm:text-sm line-clamp-2">
-              Momentos que transformamos en experiencias únicas
-            </p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-        <section id="instagram" className="section py-20 px-8 bg-[#0a0a0a]">
-                <div className="max-w-7xl mx-auto">
-                  <div className="text-center mb-12">
-                    <h3 className="text-4xl font-bold mb-4">Síguenos en Instagram</h3>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
-                      <a 
-                        href="https://instagram.com/hcefectos" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-pink-500 hover:text-pink-400 font-semibold"
-                      >
-                        @hcefectos
-                      </a> - Descubre más momentos mágicos en nuestras redes
+
+            {/* Grid MÁS COMPACTO EN MOBILE */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+              {[
+                { img: 'bodatop.jpg', icon: 'fa-ring', type: 'Boda', date: 'Mar 2025', title: 'Boda Elegante en Casa Campestre' },
+                { img: 'XV.png', icon: 'fa-crown', type: 'XV Años', date: 'Sep 2024', title: 'Quinceaños de Ensueño' },
+                { img: 'conciert.png', icon: 'fa-building', type: 'Conciertos', date: 'Ago 2024', title: 'Efectos en concierto de Antonio Eslait' },
+                { img: 'Humorosa.jpg', icon: 'fa-baby-carriage', type: 'Revelación', date: 'Oct 2025', title: 'Revelación de Sexo Emocionante' },
+                { img: 'lajuma.png', icon: 'fa-video', type: 'Video cancion', date: 'ene 2024', title: 'Efectos especiales de La Banda Del 5' },
+                { img: 'INa-1.png', icon: 'fa-bomb', type: 'Inauguracion', date: 'Ago 2025', title: 'Inauguración Inolvidable' }
+              ].map((event, index) => (
+                <div 
+                  key={index} 
+                  className="bg-black/70 backdrop-blur-md rounded-lg sm:rounded-xl overflow-hidden border border-purple-600/30 hover:border-purple-500 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/30"
+                >
+                  {/* Imagen MÁS PEQUEÑA EN MOBILE */}
+                  <div className="relative h-44 sm:h-48 md:h-56 overflow-hidden">
+                    <Image 
+                      src={`/img/eventos/${event.img}`}
+                      alt={event.title}
+                      fill
+                      className="object-cover hover:scale-110 transition duration-500"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading="lazy"
+                      quality={75}
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-2 sm:p-3 md:p-4 flex justify-between items-center">
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <i className={`fas ${event.icon} text-pink-500 text-xs sm:text-sm`}></i>
+                        <span className="text-xs sm:text-sm font-semibold">{event.type}</span>
+                      </div>
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <i className="fas fa-calendar text-pink-500 text-xs sm:text-sm"></i>
+                        <span className="text-xs sm:text-sm">{event.date}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Contenido MÁS COMPACTO */}
+                  <div className="p-2 sm:p-3 md:p-4">
+                    <h4 className="font-bold text-sm sm:text-base md:text-lg mb-1 sm:mb-2 line-clamp-1">
+                      {event.title}
+                    </h4>
+                    <p className="text-gray-400 text-xs sm:text-sm line-clamp-2">
+                      Momentos que transformamos en experiencias únicas
                     </p>
                   </div>
-
-                  {/* ✅ NUEVO: Grid estático en lugar de BeholdWidget */}
-                  <InstagramGrid />
-
-                  <div className="text-center mt-8">
-                    <a
-                      href="https://instagram.com/hcefectos"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3 rounded-full font-semibold hover:scale-105 transition"
-                    >
-                      <i className="fab fa-instagram text-xl"></i>
-                      Ver Perfil Completo
-                    </a>
-                  </div>
                 </div>
-              </section>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="instagram" className="section py-20 px-8 bg-[#0a0a0a]">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h3 className="text-4xl font-bold mb-4">Síguenos en Instagram</h3>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                <a 
+                  href="https://instagram.com/hcefectos" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-pink-500 hover:text-pink-400 font-semibold"
+                >
+                  @hcefectos
+                </a> - Descubre más momentos mágicos en nuestras redes
+              </p>
+            </div>
+
+            {/* Grid estático en lugar de BeholdWidget */}
+            <InstagramGrid />
+
+            <div className="text-center mt-8">
+              <a
+                href="https://instagram.com/hcefectos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3 rounded-full font-semibold hover:scale-105 transition"
+              >
+                <i className="fab fa-instagram text-xl"></i>
+                Ver Perfil Completo
+              </a>
+            </div>
+          </div>
+        </section>
 
         {/* Footer */}
         <Footer />
-{/* Botones flotantes - Instagram y WhatsApp */}
+
+        {/* Botones flotantes - Instagram y WhatsApp */}
         {showWhatsApp && (
           <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-4">
             {/* Botón de Instagram */}
@@ -245,7 +262,8 @@ export default function Home() {
 
             {/* Botón de WhatsApp */}
             <a 
-              href="https://wa.me/573137431884?text=Hola%20HC%20Efectos,%20quiero%20cotizar%20un%20evento"
+                          
+              href="https://wa.me/573137431884?text=Hola%20HC%20Efectos%2C%20me%20interesa%20conocer%20sus%20servicios%20de%20efectos%20especiales%20para%20mi%20evento.%20%C2%BFPodr%C3%ADan%20enviarme%20informaci%C3%B3n%20y%20cotizaci%C3%B3n%3F"
               target="_blank"
               rel="noopener noreferrer"
               className="group relative w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-2xl animate-pulse"
@@ -261,11 +279,12 @@ export default function Home() {
           </div>
         )}
 
-        {/* Modal de Cotización */}
+        {/* Modal de Cotización - recibe preselectedEventType */}
         {quoteModalOpen && (
           <QuoteModal 
             isOpen={quoteModalOpen} 
-            onClose={() => setQuoteModalOpen(false)} 
+            onClose={handleCloseQuoteModal}
+            preselectedEventType={selectedEventType}
           />
         )}
       </div>

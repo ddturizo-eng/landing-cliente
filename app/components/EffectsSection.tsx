@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import AdvisoryModal from './AdvisoryModal';
 
 interface EffectsSectionProps {
   onOpenQuoteModal: () => void;
@@ -121,6 +121,7 @@ function EffectModal({ effect, isOpen, onClose, onQuote }: EffectModalProps) {
 
 export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps) {
   const [selectedEffect, setSelectedEffect] = useState<Effect | null>(null);
+  const [advisoryModalOpen, setAdvisoryModalOpen] = useState(false);
 
   const effects: Effect[] = [
     {
@@ -215,25 +216,19 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
               >
                 {/* Thumbnail Background con imagen de fondo */}
                 <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gradient-to-br from-purple-900/30 to-pink-900/30">
-                  {/* Imagen de fondo semi-transparente */}
-                  <div className="absolute inset-0 w-full h-full">
-                    <Image
-                      src={effect.thumbnail}
-                      alt={effect.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition-all duration-500"
-                      style={{ opacity: 0.3 }}
-                      priority={index === 0}
-                      quality={75}
-                    />
-                    {/* Overlay degradado para mejor legibilidad */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
-                  </div>
+                  {/* Imagen de fondo como background-image - SIN ERRORES DE HIDRATACIÓN */}
+                  <div 
+                    className="absolute inset-0 w-full h-full bg-cover bg-center opacity-30"
+                    style={{ 
+                      backgroundImage: `url(${effect.thumbnail})` 
+                    }}
+                  />
+                  {/* Overlay degradado para mejor legibilidad */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
                   
                   {/* Ícono sobre la imagen */}
                   <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-                    <i className={`${effect.icon} text-4xl sm:text-5xl md:text-7xl text-white transition-transform duration-300`} style={{ opacity: 0.6, filter: 'drop-shadow(0 20px 25px rgb(0 0 0 / 0.5))' }}></i>
+                    <i className={`${effect.icon} text-4xl sm:text-5xl md:text-7xl text-white opacity-60`} style={{ filter: 'drop-shadow(0 20px 25px rgb(0 0 0 / 0.5))' }}></i>
                   </div>
                   
                   {/* Play overlay - solo en hover */}
@@ -294,7 +289,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
               ¿No estás seguro de qué efecto elegir? Contáctanos y te asesoramos
             </p>
             <button
-              onClick={onOpenQuoteModal}
+              onClick={() => setAdvisoryModalOpen(true)}
               className="bg-gradient-to-r from-purple-600 to-pink-600 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-full font-semibold text-sm sm:text-base hover:scale-105 transition-all shadow-lg shadow-pink-600/30"
             >
               <i className="fas fa-comments mr-2"></i>
@@ -313,6 +308,12 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
           onQuote={onOpenQuoteModal}
         />
       )}
+
+      {/* Advisory Modal */}
+      <AdvisoryModal
+        isOpen={advisoryModalOpen}
+        onClose={() => setAdvisoryModalOpen(false)}
+      />
     </>
   );
 }
