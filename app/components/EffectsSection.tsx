@@ -15,7 +15,6 @@ interface Effect {
   fullDesc: string;
   vimeoId: string;
   tags: string[];
-  thumbnail: string;
 }
 
 interface EffectModalProps {
@@ -131,8 +130,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       shortDesc: 'Cascadas de chispas brillantes sin calor para momentos mágicos',
       fullDesc: 'Las fuentes frías son cascadas de chispas brillantes que no generan calor. Perfectas para bodas, quinceañeras e inauguraciones. Crean un efecto visual espectacular de hasta 3 metros de altura, ideales para la entrada de novios, el primer baile o cualquier momento especial. Completamente seguras para uso en interiores y exteriores.',
       vimeoId: '1133639422',
-      tags: ['Bodas', 'XV Años', 'Inauguraciones'],
-      thumbnail: '/img/efectos/fuentesf.jpg'
+      tags: ['Bodas', 'XV Años', 'Inauguraciones']
     },
     {
       id: 'niebla-baja',
@@ -141,8 +139,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       shortDesc: 'Efecto de nubes a ras del suelo para un ambiente cinematográfico',
       fullDesc: 'Crea la ilusión de bailar sobre las nubes con nuestro efecto de niebla baja. Esta técnica especial genera una capa densa de niebla que permanece a ras del suelo, perfecta para el primer baile de bodas o presentaciones elegantes. El efecto dura varios minutos y garantiza fotografías y videos espectaculares con un ambiente romántico y cinematográfico.',
       vimeoId: '1133639330',
-      tags: ['Bodas', 'XV Años', 'Eventos Elegantes'],
-      thumbnail: '/img/efectos/nieblabaja.png'
+      tags: ['Bodas', 'XV Años', 'Eventos Elegantes']
     },
     {
       id: 'pirotecnia-aerea',
@@ -151,8 +148,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       shortDesc: 'Espectáculo de luces en el cielo para eventos al aire libre',
       fullDesc: 'Llena el cielo de color y emoción con nuestra pirotecnia aérea profesional. Espectáculos pirotécnicos sincronizados que iluminan la noche con cascadas de luz, destellos brillantes y efectos espectaculares. Ideal para bodas, aniversarios, fiestas empresariales y eventos públicos. Cada show está cuidadosamente coordinado para ofrecer máxima seguridad y un impacto visual inolvidable.',
       vimeoId: '1135903066',
-      tags: ['Bodas', 'Eventos Corporativos', 'Celebraciones'],
-      thumbnail: '/img/efectos/piro.jpg'
+      tags: ['Bodas', 'Eventos Corporativos', 'Celebraciones']
     },
     {
       id: 'ventury',
@@ -161,8 +157,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       shortDesc: 'Columnas de CO2 que disparan hasta 8 metros de altura',
       fullDesc: 'Los cañones Ventury generan impresionantes columnas de CO2 frío que disparan hasta 8 metros de altura. Perfectos para momentos de alto impacto como entradas espectaculares, drops en eventos musicales, lanzamientos de productos o cualquier momento que requiera un efecto dramático. El CO2 se disipa rápidamente sin dejar residuos, siendo completamente seguro y creando un impacto visual inolvidable.',
       vimeoId: '1143668674',
-      tags: ['Eventos Corporativos', 'Conciertos', 'Inauguraciones'],
-      thumbnail: '/img/efectos/ventury.jpg'
+      tags: ['Eventos Corporativos', 'Conciertos', 'Inauguraciones']
     },
     {
       id: 'revelacion-sexo',
@@ -171,8 +166,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
       shortDesc: 'Explosión de color para el momento más emocionante',
       fullDesc: 'Celebra uno de los momentos más esperados con una explosión espectacular de humo de color. Combinamos fuentes frías, confeti y humo de color (rosa o azul) para crear un instante mágico lleno de sorpresa y alegría. El efecto es sincronizado para máximo impacto, creando el momento perfecto para fotos y videos que durarán toda la vida. Incluye opciones de personalización según tus preferencias.',
       vimeoId: '1143149062',
-      tags: ['Revelaciones', 'Baby Shower', 'Celebraciones Familiares'],
-      thumbnail: '/img/efectos/revelacionsex.jpg'
+      tags: ['Revelaciones', 'Baby Shower', 'Celebraciones Familiares']
     }
   ];
 
@@ -205,7 +199,7 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
             </p>
           </div>
 
-          {/* Effects Grid - MÁS COMPACTO EN MOBILE */}
+          {/* Effects Grid - OPTIMIZADO SIN IMÁGENES */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
             {effects.map((effect, index) => (
               <div
@@ -214,19 +208,12 @@ export default function EffectsSection({ onOpenQuoteModal }: EffectsSectionProps
                 className="group relative bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] rounded-lg sm:rounded-xl overflow-hidden border border-purple-600/20 hover:border-purple-500 transition-all duration-300 cursor-pointer hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-600/30"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Thumbnail Background con imagen de fondo */}
+                {/* Thumbnail Background - SOLO GRADIENTES, SIN IMÁGENES */}
                 <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden bg-gradient-to-br from-purple-900/30 to-pink-900/30">
-                  {/* Imagen de fondo como background-image - SIN ERRORES DE HIDRATACIÓN */}
-                  <div 
-                    className="absolute inset-0 w-full h-full bg-cover bg-center opacity-30"
-                    style={{ 
-                      backgroundImage: `url(${effect.thumbnail})` 
-                    }}
-                  />
-                  {/* Overlay degradado para mejor legibilidad */}
+                  {/* Overlay degradado para profundidad */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none"></div>
                   
-                  {/* Ícono sobre la imagen */}
+                  {/* Ícono grande y centrado */}
                   <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
                     <i className={`${effect.icon} text-4xl sm:text-5xl md:text-7xl text-white opacity-60`} style={{ filter: 'drop-shadow(0 20px 25px rgb(0 0 0 / 0.5))' }}></i>
                   </div>
